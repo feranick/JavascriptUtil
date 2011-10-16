@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Layer thickness calculator for epitaxial graphene on SiC using Raman Spectroscopy</title>
+
+<script type="text/javascript">
+
+var a=0.039*1;
+var b=0.05*1;
+var minS=0.3*1;
+var maxS=1.046*1;
+var minTk=0.1*1;
+var maxTk=32*1;
+
+function convert(s)
+{
+
+if(isNaN(document.ramthick.tk.value) || isNaN(document.ramthick.S.value))
+	document.getElementById("to_value").innerHTML = "Not a valid number.";
+else
+{
+if(s==1)
+	{S = document.ramthick.S.value*1;
+	if(S.toFixed(3)<minS || S.toFixed(3)>maxS)
+		{document.getElementById("to_value").innerHTML = "Out of calibrated range ";
+		document.getElementById("warning").innerHTML = minS + " < S < "+ maxS;}
+	
+	else
+		{tk1 = -(Math.log(S)-b)/a;
+		document.ramthick.tk.value = tk1.toFixed(1);
+		document.getElementById("to_value").innerHTML = " S = " + S.toFixed(3) + " => Layers: " + tk1.toFixed(1);
+		document.getElementById("warning").innerHTML = "";}
+	}
+	
+else
+	{tk = document.ramthick.tk.value*1;
+	if(tk.toFixed(1)<minTk || tk.toFixed(3)>maxTk)
+		{document.getElementById("to_value").innerHTML = "Out of calibrated range ";
+		document.getElementById("warning").innerHTML = minTk + " < layers < "+ maxTk;}
+	else
+		{S1 = Math.exp(b-a*tk);
+		document.ramthick.S.value = S1.toFixed(3);
+		document.getElementById("to_value").innerHTML = " S = " + S1.toFixed(3) + " => Layers: " + tk.toFixed(1);
+		document.getElementById("warning").innerHTML = "";}
+	
+	}
+}
+}
+
+function selthick()
+{
+	var index = document.ramthick.seltk.selectedIndex;
+	
+	if(index==0)
+		{document.ramthick.tk.value=1}
+	if(index==1)
+		{document.ramthick.tk.value=2}	
+	if(index==2)
+		{document.ramthick.tk.value=3}
+	if(index==3)
+		{document.ramthick.tk.value=4}
+	if(index==4)
+		{document.ramthick.tk.value=5}
+	if(index==5)
+		{document.ramthick.tk.value=6}
+	if(index==6)
+		{document.ramthick.tk.value=7}
+	if(index==7)
+		{document.ramthick.tk.value=8}
+	if(index==8)
+		{document.ramthick.tk.value=9}
+	if(index==9)
+		{document.ramthick.tk.value=10}						
+	
+	convert(2);
+}
+
+
+
+function resetform()
+	{document.ramthick.seltk.selectedIndex=0;
+	document.ramthick.S.value = "0.61";
+	convert(1);
+	}
+	
+function init() {
+convert(1);
+}
+
+window.onload = init; 	
+	
+
+</script>
+</head>
+<body>
+<font size="4"><b>Layer thickness calculator for epitaxial graphene on SiC using Raman Spectroscopy</b><br><br>
+<form name="ramthick"><font size="4">
+ 
+S = <input name="S" value="0.61" size="12" maxlength="12" onkeyup="convert(1)" type="text"><br>
+<small><small>S: moltiplication factor to subtract the contribution of SiC from EiG/SiC spectrum. </small></small>
+<br><br>Thickness: <select name="seltk" onchange="selthick()" onblur="selthick()">
+<option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select> 
+
+<input name="tk" value="1000" size="12" maxlength="12" onkeyup="convert(2)" type="text"> layers <br><br>
+<label id="to_value" size="12" maxlength="12" type="text"></label><br>
+<small><label id="warning" size="12" maxlength="12" type="text"></label></small></font></form>
+<br>
+
+<input value="Reset" onclick="resetform()" type="button">
+
+<br><hr>
+<small><small>Reference: S. Shivaraman et al. Journal of Electronics Materials 38, (2009), 725<br>  </small></small>
+<hr style="width: 100%; height: 2px;">
+<small><a href="lab.html">main</a></small>
+</body></html>

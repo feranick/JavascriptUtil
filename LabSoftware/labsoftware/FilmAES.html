@@ -1,0 +1,146 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Measure overlayer film thickness and composition with Auger electron spectroscopy
+</title>
+
+<script type="text/javascript">
+
+function convert(s)
+{
+ratio = document.length_con.from_value.value *1;
+if(isNaN(document.length_con.from_value.value) || isNaN(document.length_con.OverI.value) || isNaN(document.length_con.SubI.value))
+document.getElementById("to_value").innerHTML = "Not a valid number.";
+else
+{conversion(s);}
+}
+
+
+function Iratio()
+{
+ratio1 = document.length_con.OverI.value/document.length_con.SubI.value;
+document.length_con.from_value.value = ratio1.toFixed(2);
+convert(1);
+}
+
+
+function conversion(s)
+{
+var dA = 0.00 *1;
+var Rinf = document.length_con.Rinf.value *1;
+var LOver = document.length_con.LOver.value *1;
+var LSub = document.length_con.LSub.value *1;
+var dspac = document.length_con.dspac.value *1;
+var OverI = document.length_con.OverI.value *1;
+var SubI = document.length_con.SubI.value *1;
+var SxOv = document.length_con.SxOv.value *1;
+var SxSub = document.length_con.SxSub.value *1;
+var angle = document.length_con.angle.value*Math.PI/180.0;
+
+var R1 = 0.00 *1;
+var Prec=0.01 *1;
+
+while (dA<=100.0)
+	{dA +=Prec;
+
+	R1=Rinf*(1-Math.exp(-dA/LOver))/Math.exp(-dA/LSub);
+	//ratio=R1;
+	
+	if((ratio-R1)<0.0)
+			{break;}
+	}
+
+dAa = dA*Math.cos(angle);
+document.getElementById("to_value").innerHTML = " Overlayer thickness = " + dAa.toFixed(2) + " &Aring;  (" + (dAa/dspac).toFixed(2) + " layers)";
+
+if(s==1)
+{compOv = (OverI/SxOv)/((OverI/SxOv)+(SubI/SxSub));
+compSub = (SubI/SxSub)/((OverI/SxOv)+(SubI/SxSub));
+
+document.getElementById("comp1").innerHTML = " Composition overlayer: " + (compOv*100).toFixed(2) +" % ";
+document.getElementById("comp2").innerHTML = " Composition substrate: " + (compSub*100).toFixed(2) +" % ";
+}
+
+if(s==2)
+{
+document.getElementById("comp1").innerHTML = " ";
+document.getElementById("comp2").innerHTML = " ";
+}
+
+}
+
+window.onload=function() {
+convert(1);
+}
+
+function resetform()
+	{document.length_con.Rinf.value = "0.93";
+	document.length_con.LOver.value = "4.0";
+	document.length_con.LSub.value = "4.5";
+	document.length_con.SxOv.value = "0.01875";
+	document.length_con.SxSub.value = "0.375";
+	document.length_con.dspac.value = "2.89";
+	document.length_con.angle.value = "0.0";
+	convert(1);
+	}
+
+</script>
+
+
+</head>
+
+<body>
+<font size="4"><b>Measure overlayer film thickness and composition with Auger electron spectroscopy</b><br><br>
+<font size="4">
+
+<form name="length_con">
+R<sub>infinity</sub> = (I<sub>overlayer</sub>)<sub>inf</sub> / (I<sub>substrate</sub>)<sub>inf</sub> = 
+<input name="Rinf" value="0.93" size="12" maxlength="12" onkeyup="convert(1)" type="text">
+<br><br>
+Angle detector - surface normal = <input name="angle" value="0.0" size="12" maxlength="12" onkeyup="convert(1)" type="text">&deg; (degrees)
+<br><br>
+Overlayer <a href="javascript:void(0);" name="IMFP1" title=" Inelastic mean free path " onclick="window.open(&quot;IMFP.html&quot;,&quot;Ratting&quot;,&quot;width=550,height=500,0,status=0,&quot;);">inelastic mean free path</a> (LOver) = <input name="LOver" value="4.0" size="12" maxlength="12" onkeyup="convert(1)" type="text"> &Aring;<br>
+
+Substrate <a href="javascript:void(0);" name="IMFP2" title=" Inelastic mean free path " onclick="window.open(&quot;IMFP.html&quot;,&quot;Ratting&quot;,&quot;width=550,height=500,0,status=0,&quot;);">inelastic mean free path</a> (LSub) = <input name="LSub" value="4.5" size="12" maxlength="12" onkeyup="convert(1)" type="text"> &Aring;<br><br>
+
+Overlayer sensitivity factor (SxOv) = <input name="SxOv" value="0.01875" size="12" maxlength="12" onkeyup="convert(1)" type="text"> <br>
+Substrate sensitivity factor (SxSub) = <input name="SxSub" value="0.375" size="12" maxlength="12" onkeyup="convert(1)" type="text"> <br><br>
+Overlayer interlayer spacing = <input name="dspac" value="2.89" size="12" maxlength="12" onkeyup="convert(1)" type="text">
+ 
+<br>
+<br>
+<b>Overlayer Intensity (OverI) = </b><input name="OverI" value="1200" size="12" maxlength="12" onkeyup="Iratio()" type="text"><br>
+<b>Substrate Intensity (SubI) = </b><input name="SubI" value="900" size="12" maxlength="12" onkeyup="Iratio()" type="text">
+<br>
+<br>
+<b>I<sub>overlayer</sub> / I<sub>substrate</sub> Intensity ratio: </b><input name="from_value" value="1.33" size="12" maxlength="12" onkeyup="convert(2)" type="text"><br>
+<br><input value="Reset" onclick="resetform()" type="button">
+<label id="to_value" size="12" maxlength="12" type="text"></label><br>
+<label id="comp1" size="12" maxlength="12" type="text"></label><br>
+<label id="comp2" size="12" maxlength="12" type="text"></label>
+</form>
+</font>
+<br>
+<hr><br>
+
+Default values for overlayer: <b> Au </b> (69 eV)<br>
+Default values for substrate: <b> Si </b> (92 eV)<br><br>
+
+<b>Notes:</b><br>
+
+R<sub>inf</sub>: Ratio of intensities for overlayer and substrate each measured for bulk materials (not a film over a substrate). <br><br>
+
+<b>Computation of compositions: </b><br>
+compOv = (OverI/SxOv)/((OverI/SxOv)+(SubI/SxSub)); <br>
+compSub = (SubI/SxSub)/((OverI/SxOv)+(SubI/SxSub)); <br><br>
+
+<b>Computation of overlayer thickness: </b><br> D. Tian et al. Phys. Rev. B 45 (1992), 3749<br>
+P.J. Cumpson et al. Surf. and Interface Analysis 29 (2000), 403-406<br>
+S. Geng et al. Mat. Scie. Forum 437-438 (2003), 195-198<br><br>
+
+<b>To compute the inelastic mean free path:</b><br>
+<a href="javascript:void(0);" name="IMFP3" title=" Inelastic mean free path " onclick="window.open(&quot;IMFP.html&quot;,&quot;Ratting&quot;,&quot;width=550,height=500,0,status=0,&quot;);">IMFP</a>
+
+ or </b><a href="http://www.quases.com/QUASES_IMFP_TPP2M/QUASES_IMFP_TPP2_home.htm">QUASES_IMFP_TPP2M</a>
+<hr style="width: 100%; height: 2px;">
+<small><a href="lab.html">main</a></small>
+</body></html>

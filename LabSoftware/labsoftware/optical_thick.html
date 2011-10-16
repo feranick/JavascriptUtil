@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Graphene layer thickness via optical microscopy</title>
+
+<script type="text/javascript">
+
+//siccov
+
+var a=0.22542*1;
+var b=8.227*1;
+var c=8.9292*1;
+
+
+function convert()
+{
+ratio = document.siccov.ratio.value;
+if(isNaN(document.siccov.ratio.value) || isNaN(document.siccov.SiO2.value) || isNaN(document.siccov.Graphene.value))
+document.getElementById("thick_value").innerHTML = "Not a valid number.";
+else
+{
+// Conversion
+document.getElementById("warning").innerHTML = " ";
+	NL=a + b * ratio + c*ratio*ratio;
+if(NL<1)
+	{document.getElementById("thick_value").innerHTML = " Less than 1 layer...";}
+else
+	{if (ratio>0.8)
+		{document.getElementById("thick_value").innerHTML = " HOPG (>10 layers)";}
+	else
+		{document.getElementById("thick_value").innerHTML = NL.toFixed(1);}
+	}
+	
+}
+}
+
+function cratio()
+{
+var ratio1 = (document.siccov.SiO2.value-document.siccov.Graphene.value)/document.siccov.SiO2.value;
+
+document.siccov.ratio.value = ratio1.toFixed(2);
+convert();
+}
+
+
+
+function resetform()
+	{document.siccov.SiO2.value = "1000";
+	document.siccov.Graphene.value = "800";
+	cratio();	
+	}
+
+
+window.onload = function() {
+cratio();
+}
+
+
+</script>
+</head>
+<body>
+<font size="4"><b>Graphene layer thickness via optical microscopy</b><br><br>
+
+<form name="siccov">
+Intensity SiO2: <input name="SiO2" value="1000" size="12" maxlength="12" type="text" onkeyup="cratio()"><br> 
+Intensity Graphene: <input name="Graphene" value="800" size="12" maxlength="12" type="text" onkeyup="cratio()">
+<br>
+<br>Contrast: <input name="ratio" value="1.33" size="12" maxlength="12" type="text" onkeyup="convert()"><br><br>
+ Number of graphene layers: <label id="thick_value" size="12" maxlength="12" type="text"></label><br>
+ <label id="warning" size="12" maxlength="12" type="text"></label>
+ 
+ 
+</form>
+
+
+</font>
+<br><input value="Reset" onclick="resetform()" type="button">
+
+<br><hr style="width: 100%; height: 2px;">
+<small><small>Note: <br> Calibration valid for SiO2 film (285 nm) on Si.</small></small><br>
+<small><small>References: <br> Z.H.Ni et al. Nano Letters 7 (2007), 2758.</small></small>
+<br><hr>
+<a href="lab.html">main</a>
+
+
+
+
+
+</body></html>

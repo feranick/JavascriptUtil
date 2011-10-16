@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Prep chamber temperature calibration</title>
+
+<script type="text/javascript">
+var a1, b1, c1, d1, e1;
+var a2, b2, c2, d2, e2;
+var tstart, tend;
+
+function convert(s)
+{
+realt = document.pchamber.realt.value;
+tc = document.pchamber.tc.value;
+
+//tc1=a1+b1*realt+c1*Math.pow(realt,2)+d1*Math.pow(realt,3)+e1*Math.pow(realt,4);
+//realt1=a2+b2*tc+c2*Math.pow(tc,2)+d2*Math.pow(tc,3)+e2*Math.pow(tc,4);
+
+function freal(tc)
+	{ return a2+b2*tc+c2*Math.pow(tc,2)+d2*Math.pow(tc,3)+e2*Math.pow(tc,4);}
+
+function ftc(realt)
+	{ return a1+b1*realt+c1*Math.pow(realt,2)+d1*Math.pow(realt,3)+e1*Math.pow(realt,4);}
+
+
+var tc1=ftc(realt);
+var realt1=freal(tc);
+
+
+
+if(isNaN(document.pchamber.realt.value) || isNaN(document.pchamber.tc.value))
+document.getElementById("to_value").innerHTML = "Not a valid number.";
+else
+{
+if(s==1)
+	{if(realt1.toFixed(1)<0 || tc<tstart || tc> tend)
+		{document.pchamber.realt.value = "";
+		document.getElementById("to_value").innerHTML = "Temperature out of calibrated range ";
+		document.getElementById("warning").innerHTML = tstart + " < TC < "+tend +"&deg;C" + " (" + freal(tstart).toFixed(1) + " < Real < "+ freal(tend).toFixed(1) +"&deg;C)";}
+	else	
+		{document.pchamber.realt.value = realt1.toFixed(1);
+		document.getElementById("to_value").innerHTML = " (ThermoCouple = " + tc + "&deg;C) -> (Real T = " + realt1.toFixed(1) + "&deg;C)";
+		document.getElementById("warning").innerHTML = "";}
+		}
+else
+	{if(tc1.toFixed(1)<0 || tc1.toFixed(1)<tstart || tc1.toFixed(1)> tend)
+		{document.pchamber.tc.value = "";
+		document.getElementById("to_value").innerHTML = "Temperature out of range ";
+		document.getElementById("warning").innerHTML = tstart + " < TC < "+tend +"&deg;C" + " (" + freal(tstart).toFixed(1) + " < Real < "+ freal(tend).toFixed(1) +"&deg;C)";}
+	else	
+		{document.pchamber.tc.value = tc1.toFixed(1);
+		document.getElementById("to_value").innerHTML = " (Real T = " +realt+ "&deg;C) -> (ThermoCouple = " +tc1.toFixed(1)+ "&deg;C)";
+		document.getElementById("warning").innerHTML = "";}
+		}
+}
+}
+
+function calt()
+{
+	var index = document.pchamber.selt.selectedIndex;
+	document.pchamber.realt.value=1500-index*50;
+	convert(2);	
+}
+
+function calibration()
+{
+	var index = document.pchamber.selcal.selectedIndex;
+	
+if(index==0)
+		{//calibration: 03/23/10
+		
+		
+		//real to tc
+		a1=-339.34;
+		b1=1.1084;
+		c1=4.0871e-4;
+		d1=-7.6743e-7;
+		e1=2.4296e-10;
+		
+		//tc to real
+		a2=-999.99;
+		b2=10.311;
+		c2=-2.4923e-2;
+		d2=2.8356e-5;
+		e2=-1.1018e-8;
+		
+		tstart=350*1;
+		tend=1030*1;}
+	
+	if(index==1)
+		{//calibration: 02/26/10
+		
+		//real to tc
+		a1=-3745.1;
+		b1=12.492;
+		c1=-1.369e-2;
+		d1=6.8849e-6;
+		e1=-1.2857e-9;
+		
+		//tc to real
+		a2=442.15;
+		b2=1.6622;
+		c2=-4.9775e-3;
+		d2=7.9549e-6;
+		e2=-3.4122e-9;
+		
+		tstart=400*1;
+		tend=1000*1;}
+	
+	if(index==2)
+		{//calibration: 08/13/09
+				
+		//real to tc
+		a1=-907.87357;
+		b1=3.17485;
+		c1=-2.17e-3;
+		d1=5.8316e-7;
+		e1=0.;
+		
+		//tc to real
+		a2=1211.77447;
+		b2=-3.49271;
+		c2=6.4e-3;
+		d2=-2.49933e-6;
+		e2=0.0;
+		
+		tstart=400*1;
+		tend=1000*1;}
+	
+	if(index==3)
+		{//calibration: 09/02/08
+		
+		//real to tc
+		a1=-6652.1;
+		b1=23.841;
+		c1=-0.029923;
+		d1=1.6804e-5;
+		e1=-3.4771e-9;
+
+		//tc to real
+		a2=-475.5;
+		b2=10.589;
+		c2=-0.035757;
+		d2=5.3244e-5;
+		e2=-2.6931e-8;
+		
+		tstart=400*1;
+		tend=1000*1;}
+	
+	if(index==4)
+		{//calibration: 08/26/08
+		//real to tc
+		a1=-19200;
+		b1=75.447;
+		c1=-0.10787;
+		d1=6.8372e-5;
+		e1=-1.6099e-8;
+
+		//tc to real
+		a2=-707.3;
+		b2=12.094;
+		c2=-0.038271;
+		d2=5.1967e-5;
+		e2=-2.3967e-8;
+		
+		tstart=300*1;
+		tend=1000*1;}
+		
+	if(index==5)
+		{//calibration: 03/28/08
+		//real to tc
+		a1=-1583.66439;
+		b1=5.14862;
+		c1=-4.21e-3;
+		d1=1.26893e-6;
+		e1=0.0;
+
+		//tc to real
+		a2=1253.41597;
+		b2=-4.2091;
+		c2=8.74e-3;
+		d2=-4.18607e-6;
+		e2=0.0;
+		
+		tstart=400*1;
+		tend=1000*1;}	
+	
+	convert(2);
+}
+
+
+function resetform()
+	{document.pchamber.selcal.selectedIndex=0;
+	document.pchamber.realt.value = "1000";
+	document.pchamber.selt.selectedIndex=10;
+	convert(2);
+	}
+	
+function init() {
+calibration();
+document.pchamber.selt.selectedIndex=10;
+convert(2);
+}
+
+window.onload = init; 	
+	
+
+</script>
+</head>
+<body>
+
+<form name="pchamber"><font size="4">
+Calibration: <select name="selcal" onchange="calibration()" onblur="calibration()">
+<option>03/23/10 (Current - Nicola - tc3)</option>
+<option>02/26/10 (Nicola - tc2)</option><option>08/13/09 (Nicola - tc)</option><option>09/02/08 (Ben)</option><option>08/26/08</option><option>03/28/08</option></select> 
+<br><br>Real T(&deg;C) = <select name="selt" onchange="calt()" onblur="calt()">
+<option>1500</option><option>1450</option><option>1400</option><option>1350</option><option>1300</option><option>1250</option><option>1200</option><option>1150</option><option>1100</option><option>1050</option><option>1000</option><option>950</option><option>900</option><option>850</option></select>
+<input name="realt" value="1000" size="12" maxlength="12" onkeyup="convert(2)" type="text"><br>
+ThermoCouple T(&deg;C) = <input name="tc" value="1000" size="12" maxlength="12" onkeyup="convert(1)" type="text"><br><br>
+<label id="to_value" size="12" maxlength="12" type="text"></label><br>
+<small><label id="warning" size="12" maxlength="12" type="text"></label></small></font></form>
+<br>
+
+<input value="Reset" onclick="resetform()" type="button">
+
+<br><hr style="width: 100%; height: 2px;">
+<a href="lab.html">main</a>
+</body></html>

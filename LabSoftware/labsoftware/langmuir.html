@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Langmuir</title>
+
+<script type="text/javascript">
+
+var mbartotorr=0.7500638*1;
+var Lconst=1.0E-6*1;
+var punits=1*1;
+var exptime=1*1;
+
+function calc()
+{
+pressure = document.langmuir.pressure.value*1;
+stime = document.langmuir.stime.value *1;
+mtime = document.langmuir.mtime.value *1;
+
+if(isNaN(document.langmuir.stime.value) || isNaN(document.langmuir.mtime.value))
+	{document.getElementById("lang_value").innerHTML = "Not a valid number.";}
+
+else
+	{
+	result=(pressure*punits)*exptime/Lconst;
+	document.getElementById("lang_value").innerHTML =  result.toFixed(1);	
+	}
+}
+
+
+function presstype()
+{
+var index = document.langmuir.pressunits.selectedIndex;
+if(index ==0)
+	{punits=1.0;}
+if(index==1)
+	{punits=mbartotorr;}
+exp();
+}
+
+function exp()
+{
+exptime = (document.langmuir.stime.value*1)+(document.langmuir.mtime.value*60);
+calc();
+}
+
+function resetform()
+	{document.langmuir.pressunits.selectedIndex=0;	
+	document.langmuir.pressure.value = "1e-7";
+	document.langmuir.stime.value = "14";
+	document.langmuir.mtime.value = "9";
+	presstype();
+	exp();
+	}
+
+window.onload = function() {
+presstype();
+}
+
+</script>
+</head>
+<body>
+<font size="4"><b>Langmuir</b>
+<br><small><small><a href="http://en.wikipedia.org/wiki/Langmuir_%28unit%29">Units of gas exposure to a crystal surface under UHV conditions</a>
+</small></small><br><br>
+<form name="langmuir"><font size="4">
+Pressure = <input name="pressure" value="1e-7" size="12" maxlength="12" type="text" onkeyup="calc()">
+<select name="pressunits" onchange="presstype()" onBlur="presstype()"><option>torr</option><OPTION>mbar</OPTION></select>
+<br><br>
+Exposure time (s) = <input name="stime" value="10" size="12" maxlength="12" type="text" onkeyup="exp()"><br>
+Exposure time (min) = <input name="mtime" value="1" size="12" maxlength="12" type="text" onkeyup="exp()"><br>
+<br> <b>Langmuirs = <label id="lang_value" size="12" maxlength="12" type="text"></label></b><br>
+<label id="warning" size="12" maxlength="12" type="text"></label>
+<br><br><input value="Reset" onclick="resetform()" type="button">
+
+</form></font>
+<br>
+<hr style="width: 100%; height: 2px;">
+<small><a href="lab.html">main</a></small>
+</body></html>

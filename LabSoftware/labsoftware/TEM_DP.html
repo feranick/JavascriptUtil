@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Measure lattice constants from TEM diffraction pattern </title>
+
+<font>
+<script type="text/javascript">
+
+function Conv()
+{
+	R1 = document.TEM_DP.R1.value *1; //in mm
+	d1 = document.TEM_DP.d1.value *1; //in mm
+	R = document.TEM_DP.R.value *1; //in mm	
+	
+	a1 = document.TEM_DP.a1.value *1;
+	a2 = document.TEM_DP.a2.value *1;
+	a3 = document.TEM_DP.a3.value *1;
+	
+	s1 = document.TEM_DP.s1.value *1;
+	s2 = document.TEM_DP.s2.value *1;
+	s3 = document.TEM_DP.s3.value *1;
+
+	if(isNaN(document.TEM_DP.R.value) || isNaN(document.TEM_DP.R1.value) || isNaN(document.TEM_DP.d1.value) || isNaN(document.TEM_DP.a1.value) || isNaN(document.TEM_DP.a2.value) || isNaN(document.TEM_DP.a3.value)|| isNaN(document.TEM_DP.s1.value) || isNaN(document.TEM_DP.s2.value) || isNaN(document.TEM_DP.s3.value))
+		{document.getElementById("warning").innerHTML = "Not a valid number.";
+		document.getElementById("lambda_value").innerHTML = " ";
+		document.getElementById("CL_value").innerHTML = " ";
+		document.getElementById("film_value").innerHTML = " ";
+		document.getElementById("dstar_value").innerHTML = " ";
+		document.getElementById("d_value").innerHTML = " ";
+	   document.getElementById("a_value").innerHTML = " ";}
+	else
+		{document.getElementById("warning").innerHTML = " ";
+		
+	   
+	//Actual conversion
+	dstar1 = Math.sqrt(Math.pow(s1,2)+Math.pow(s2,2)+Math.pow(s3,2));
+	Rd = R1*d1/dstar1; //in mm*nm
+	
+	dstar = Math.sqrt(Math.pow(a1,2)+Math.pow(a2,2)+Math.pow(a3,2));
+	d = Rd/R; //in nm	
+	a = d*dstar;	
+		
+		//document.getElementById("lambda_value").innerHTML = "Lambda = "+ lambda.toFixed(8) + " nm (non-rel) = "+ lambda2.toFixed(8) + " nm (rel) ";
+		//document.getElementById("lambda_value").innerHTML = "Lambda = " + lambda2.toFixed(8) + " nm ";		
+		document.getElementById("CL_value").innerHTML = "(lattice constant)*R/(plane distance) = "+ Rd.toFixed(2);
+		document.getElementById("d_value").innerHTML = "Corresponding distance in real space (d) = "+ (d).toFixed(4) + " A";
+		document.getElementById("dstar_value").innerHTML = "Unitless vectorial plane distance (" +a1+ "," +a2+ "," +a3+ ") = "+ dstar.toFixed(3);
+		document.getElementById("a_value").innerHTML = "Lattice constant = "+ a.toFixed(3) +" &Aring;";
+	
+	}	
+
+}
+
+function material()
+{
+	var index = document.TEM_DP.selmat.selectedIndex;
+	
+	if(index==0)
+		{document.TEM_DP.d1.value="5.43095";}
+	
+	
+	Conv();
+}
+
+function miller1()
+{
+	var index = document.TEM_DP.selmiller1.selectedIndex;
+	
+	if(index==0)
+		{document.TEM_DP.s1.value="2";
+		document.TEM_DP.s2.value="0";
+		document.TEM_DP.s3.value="0";}
+	if(index==1)
+		{document.TEM_DP.s1.value="1";
+		document.TEM_DP.s2.value="1";
+		document.TEM_DP.s3.value="1";}
+	if(index==2)
+		{document.TEM_DP.s1.value="0";
+		document.TEM_DP.s2.value="2";
+		document.TEM_DP.s3.value="2";}
+	
+	Conv();
+}
+
+function miller2()
+{
+	var index = document.TEM_DP.selmiller2.selectedIndex;
+	
+	if(index==0)
+		{document.TEM_DP.a1.value="2";
+		document.TEM_DP.a2.value="0";
+		document.TEM_DP.a3.value="0";}
+	if(index==1)
+		{document.TEM_DP.a1.value="1";
+		document.TEM_DP.a2.value="1";
+		document.TEM_DP.a3.value="1";}
+	if(index==2)
+		{document.TEM_DP.a1.value="0";
+		document.TEM_DP.a2.value="2";
+		document.TEM_DP.a3.value="2";}
+	
+	Conv();
+}
+
+function resetform()
+	{document.TEM_DP.selmat.selectedIndex=0;
+	document.TEM_DP.selmiller1.selectedIndex=0;
+	document.TEM_DP.R1.value="50.45";
+	document.TEM_DP.d1.value="5.43095";
+	miller1();	
+	Conv();
+	}
+
+function init() {
+material();
+Conv();
+}
+
+window.onload = init; 
+
+
+</script>
+
+</font>
+</head>
+<body>
+<font size="4"><b>Measure lattice constants from TEM diffraction patterns</b><br><br>
+<form name="TEM_DP"><font size="4">
+
+A. <u>In the reference diffraction pattern:</u><br><br> 
+Lattice constant reference material = <select name="selmat" onchange="material()" onblur="material()"><option>Si</option></select> 
+<input name="d1" value="5.43095" onchange="Conv()" onblur="Conv()"> &Aring;<br><br>
+Miller indices of the reference plane: <select name="selmiller1" onchange="miller1()" onblur="miller1()"><option>(200)</option><option>(111)</option><option>(022)</option></select><br>
+<input name="s1" value="2" size="12" maxlength="12" onkeyup="Conv()" type="text">
+<input name="s2" value="0" size="12" maxlength="12" onkeyup="Conv()" type="text">
+<input name="s3" value="0" size="12" maxlength="12" onkeyup="Conv()" type="text"><br><br>
+Measured reference distance R1 = <input name="R1" value="40.45" onchange="Conv()" onblur="Conv()">
+<br><small>(relative to the diffraction spot of the corresponding reference plane)</small><br><br>
+<label id="CL_value" size="12" maxlength="12" type="text"></label><br><br>
+<hr style="width: 100%; height: 1px;">
+
+B. <u>In the unknown diffraction pattern:</u><br><br>
+Distance measured on the screen (R2) = 
+<input name="R" value="50.8" size="12" maxlength="12" onkeyup="Conv()" type="text"> mm <br>
+<small><label id="d_value" size="12" maxlength="12" type="text"></label></small><br><br>
+Miller indices of the plane under consideration: <select name="selmiller2" onchange="miller2()" onblur="miller2()"><option>(200)</option><option>(111)</option><option>(022)</option></select><br>
+<input name="a1" value="2" size="12" maxlength="12" onkeyup="Conv()" type="text">
+<input name="a2" value="0" size="12" maxlength="12" onkeyup="Conv()" type="text">
+<input name="a3" value="0" size="12" maxlength="12" onkeyup="Conv()" type="text"><br><br>
+
+<small><label id="dstar_value" size="12" maxlength="12" type="text"></label></small><br>
+<label id="a_value" size="12" maxlength="12" type="text"></label>
+
+<br><label id="warning" size="12" maxlength="12" type="text"></label>
+<br><input value="Reset" onclick="resetform()" type="button">
+
+</font><hr style="width: 100%; height: 1px;">
+<small>If the camera length is known and reliable, an alternative method can be found <a href="TEM_DP2.html">here</a>.</small>
+<hr style="width: 100%; height: 2px;">
+<small><a href="lab.html">main</a></small>
+
+</form>
+</body></html>

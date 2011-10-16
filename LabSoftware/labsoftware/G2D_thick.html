@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Graphene layer thickness via AES</title>
+
+<script type="text/javascript">
+
+//siccov
+
+var a=19.628*1;
+var b=-200.11*1;
+var c=755.1*1;
+var d=-1177.1*1;
+var e=666.75*1;
+
+function convert()
+{
+ratio = document.siccov.ratio.value;
+if(isNaN(document.siccov.ratio.value) || isNaN(document.siccov.G_value.value) || isNaN(document.siccov.DD_value.value))
+document.getElementById("thick_value").innerHTML = "Not a valid number.";
+else
+{
+// Conversion
+document.getElementById("warning").innerHTML = " ";
+	NL=a + b * ratio + c*ratio*ratio + d*ratio*ratio*ratio + e*ratio*ratio*ratio*ratio;
+if(NL<1)
+	{document.getElementById("thick_value").innerHTML = " Less than 1 layer...";}
+else
+	{if (ratio>0.8)
+		{document.getElementById("thick_value").innerHTML = " HOPG (>10 layers)";}
+	else
+		{document.getElementById("thick_value").innerHTML = NL.toFixed(1);}
+	}
+	
+}
+}
+
+function cratio()
+{
+var ratio1 = document.siccov.G_value.value/document.siccov.DD_value.value;
+
+document.siccov.ratio.value = ratio1.toFixed(2);
+convert();
+}
+
+
+
+function resetform()
+	{document.siccov.G_value.value = "255";
+	document.siccov.DD_value.value = "1000";
+	cratio();	
+	}
+
+
+window.onload = function() {
+cratio();
+}
+
+
+</script>
+</head>
+<body>
+<font size="4"><b>Graphene layer thickness via G/2D intensity ratio (Raman spectroscopy)</b><br><br>
+<form name="siccov">
+G integrated intensity: <input name="G_value" value="255" size="12" maxlength="12" type="text" onkeyup="cratio()"><br> 
+2D integrated intensity: <input name="DD_value" value="1000" size="12" maxlength="12" type="text" onkeyup="cratio()">
+<br>
+<br>G/2D ratio: <input name="ratio" value="1.33" size="12" maxlength="12" type="text" onkeyup="convert()"><br><br>
+ Number of graphene layers: <label id="thick_value" size="12" maxlength="12" type="text"></label><br>
+ <label id="warning" size="12" maxlength="12" type="text"></label>
+ 
+ 
+</form>
+
+
+</font>
+<br><input value="Reset" onclick="resetform()" type="button">
+
+<br><hr style="width: 100%; height: 2px;">
+<small><small>References: <br> D. Graf et al. Nano Letters 7 (2007), 238.</small></small>
+<br><hr>
+<a href="lab.html">main</a>
+
+
+
+
+
+</body></html>

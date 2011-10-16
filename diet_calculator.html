@@ -1,0 +1,171 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Diet Calculator</title>
+
+<font>
+<script type="text/javascript">
+var gender=1;
+var a0=655*1;
+var a1=66*1;
+
+var w0m=9.6*1;
+var w1m=13.7*1;
+var h0m=1.8*1;
+var h1m=5*1;
+
+var w0b=4.35*1;
+var w1b=6.23*1;
+var h0b=4.7*1;
+var h1b=12.7*1;
+
+var y0=4.7*1;
+var y1=6.8*1;
+var mfatm= 7716.17917*1; //cal in 1 kg fat
+var mfatb=3500*1; //cal in 1 lb fat
+var a, w, y, y, ex;
+
+function BMR()
+{
+var age = document.diet.age.value *1;
+var weight=document.diet.weight.value *1;
+var heigth=document.diet.heigth.value *1;
+var dw=document.diet.dw.value *1;
+var days=document.diet.days.value *1;
+
+document.getElementById("warning").innerHTML = " ";
+//Actual conversion
+var bmr = a + w*weight + h*heigth-y*age;
+var bmr2=bmr*ex;
+//document.getElementById("to_value").innerHTML = " "+ bmr.toFixed(1);
+document.getElementById("to_value").innerHTML = bmr2.toFixed(0);
+
+var ml=dw*mfatm/days;
+var allcal=bmr2-ml;
+
+if(allcal<=0)
+	{document.getElementById("warning").innerHTML = " This diet is not realistic!"}
+else	
+	{document.getElementById("warning").innerHTML = allcal.toFixed(0);}
+}
+
+
+function setgender()
+{
+	var index = document.diet.gender.selectedIndex;
+	var indunits = document.diet.units.selectedIndex;
+	if(index==0)
+		{
+		a=a0;
+		y=y0;
+		if(indunits==0)		
+			{w=w0m;
+			h=h0m;
+			mfat=mfatm;}
+		else
+			{w=w0b;
+			h=h0b;
+			mfat=mfatb;}	
+		}
+	if(index==1)
+		{
+		a=a1;		
+		y=y1;
+		if(indunits==0)		
+			{w=wm;
+			h=h1m;
+			mfat=mfatm;}
+		else
+			{w=w1b;
+			h=h1b;
+			mfat=mfatb;}
+		}
+
+
+BMR();
+}
+
+function setexerc()
+{
+	var index = document.diet.exerc.selectedIndex;
+	if(index==0)
+		{ex=1.2;}
+	if(index==1)
+		{ex=1.375;}
+	if(index==2)
+		{ex=1.55;}
+	if(index==3)
+		{ex=1.725;}
+	if(index==4)
+		{ex=1.9;}
+
+BMR();
+}
+
+function setunits()
+{
+	var index = document.diet.units.selectedIndex;
+	if(index==0)
+		{document.getElementById("w_value").innerHTML="Kg";
+		document.getElementById("w_value2").innerHTML="Kg";
+		 document.getElementById("h_value").innerHTML="cm";}
+	if(index==1)
+		{document.getElementById("w_value").innerHTML="lb";
+		document.getElementById("w_value2").innerHTML="Kg";
+		 document.getElementById("h_value").innerHTML="in";}
+
+sequence();
+}
+
+function sequence()
+{setgender();
+setexerc();
+BMR();}
+
+function resetform()
+{document.diet.gender.selectedIndex=0;
+document.diet.exerc.selectedIndex=0;
+document.diet.units.selectedIndex=0;
+document.diet.age.value="35";
+document.diet.weight.value="60";
+document.diet.heigth.value="170";
+sequence();
+}
+
+window.onload = function() {
+document.diet.gender.selectedIndex=0;
+document.diet.exerc.selectedIndex=0;
+document.diet.units.selectedIndex=0;
+setunits();
+sequence();
+}
+
+</script>
+
+</font>
+</head>
+<body>
+<font size="4"><b><big>Diet calculator</b></big><br><br>
+
+<form name="diet"><font size="4">
+<b>1. Your current calories requirements:</b><br><br>
+Gender = <select name="gender" onchange="setgender()" onblur="setgender()"><option>Female</option><option>Male</option></select><br>
+Age: <input name="age" value="35" size="12" maxlength="12" onkeyup="BMR()" type="text"> years<br>
+Weigth: <input name="weight" value="60" size="12" maxlength="12" onkeyup="BMR()" type="text"> <label id="w_value" size="12" maxlength="12" type="text"></label><br>
+Heigth: <input name="heigth" value="170" size="12" maxlength="12" onkeyup="BMR()" type="text"> <label id="h_value" size="12" maxlength="12" type="text"></label><br><br>
+Exercise: = <select name="exerc" onchange="setexerc()" onblur="setexerc()"><option>little or no exercise</option>
+	<option>light exercise/sports 1-3 days/week</option><option>moderate exercise/sports 3-5 days/week</option>
+	<option>hard exercise/sports 6-7 days a week</option><option>very hard exercise/sports & physical job or 2x training</option></select><br>
+<br><small>In order to maintain your current body weigth you need:</small><br>
+<b><label id="to_value" size="12" maxlength="12" type="text"></b></label> cal/day<br>
+
+<br><b>2. Your diet goal:</b><br><br>
+Kg to drop: <input name="dw" value="5" size="12" maxlength="12" onkeyup="BMR()" type="text"> <label id="w_value2" size="12" maxlength="12" type="text"></label><br>
+# days for the diet: <input name="days" value="30" size="12" maxlength="12" onkeyup="BMR()" type="text"> days<br>
+<br><small>Total allowed calories:</small><br>
+<b><label id="warning" size="12" maxlength="12" type="text"></label></font><font size="4"></b> cal/day<br></font>
+
+<br><input value="Reset" onclick="resetform()" type="button">
+<br><br>Units = <select name="units" onchange="setunits()" onblur="setunits()"><option>Metric</option><option>British</option></select><br>
+</form>
+<br><hr style="width: 100%; height: 2px;">
+</body></html>

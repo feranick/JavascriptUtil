@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Inelastic Mean Free Path Calculator</title>
+
+<script type="text/javascript">
+
+var a = 829.4 *1;
+var b = 53.4 *1;
+var c = 20.8 *1;
+var d = 1.97 *1;
+var e = 0.91 *1;
+var f = 0.191 *1;
+var g = -0.10 *1;
+var h = 0.944 *1;
+var i = 0.069 *1;
+
+function convert()
+{
+En = document.length_con.En.value *1;
+if(isNaN(document.length_con.En.value) )
+document.getElementById("IMFP").innerHTML = "Not a valid number.";
+else
+{conversion();}
+}
+
+function conversion()
+{
+
+var BG = document.length_con.BG.value *1;
+var AW = document.length_con.AW.value *1;
+var VE = document.length_con.VE.value *1;
+var ro = document.length_con.ro.value *1;
+
+var U = VE*ro/AW;
+var Ep2 = a*U;
+var C1 = b-c*U;
+var C2 = d-e*U;
+
+var gamma = f/Math.sqrt(ro);
+var beta = g + h/Math.sqrt(Ep2 + Math.pow(BG, 2)) + i*Math.pow(ro, 0.1);
+IMFP = En/(Ep2*(beta*Math.log(gamma*En)-(C2/En)+(C1/Math.pow(En,2))));
+
+document.getElementById("IMFP").innerHTML = " Inelastic mean free path = " + IMFP.toFixed(2) + " A";
+
+}
+
+
+function set_material()
+{
+var index = document.length_con.material.selectedIndex;
+document.getElementById("IMFP").innerHTML = index;
+
+if(index==0) //Si
+	{document.length_con.BG.value="1.12";
+	document.length_con.AW.value="28.086";
+	document.length_con.VE.value="4";
+	document.length_con.ro.value="2.33";}
+if(index==1) //4HSiC
+	{document.length_con.BG.value="3.28";
+	document.length_con.AW.value="40.1";
+	document.length_con.VE.value="8";
+	document.length_con.ro.value="3.217";}
+if(index==2) //6HSiC
+	{document.length_con.BG.value="3.03";
+	document.length_con.AW.value="40.1";
+	document.length_con.VE.value="8";
+	document.length_con.ro.value="3.217";}
+if(index==3) //Graphite
+	{document.length_con.BG.value="-0.04";
+	document.length_con.AW.value="12";
+	document.length_con.VE.value="4";
+	document.length_con.ro.value="2.26";}
+if(index==4) //Diamond
+	{document.length_con.BG.value="5.4";
+	document.length_con.AW.value="12";
+	document.length_con.VE.value="4";
+	document.length_con.ro.value="3.53";}
+if(index==5) //Ag
+	{document.length_con.BG.value="0.0";
+	document.length_con.AW.value="107.87";
+	document.length_con.VE.value="11";
+	document.length_con.ro.value="10.5";}
+if(index==6) //Al
+	{document.length_con.BG.value="0.0";
+	document.length_con.AW.value="26.981";
+	document.length_con.VE.value="3";
+	document.length_con.ro.value="2.7";}
+if(index==7) //Au
+	{document.length_con.BG.value="0";
+	document.length_con.AW.value="196.96";
+	document.length_con.VE.value="11";
+	document.length_con.ro.value="19.3";}
+if(index==8) //Cr
+	{document.length_con.BG.value="0.0";
+	document.length_con.AW.value="51.996";
+	document.length_con.VE.value="6";
+	document.length_con.ro.value="7.19";}
+if(index==9) //Cu
+	{document.length_con.BG.value="0.0";
+	document.length_con.AW.value="63.54";
+	document.length_con.VE.value="11";
+	document.length_con.ro.value="8.96";}
+if(index==10) //Ge
+	{document.length_con.BG.value="0.67";
+	document.length_con.AW.value="72.59";
+	document.length_con.VE.value="4";
+	document.length_con.ro.value="5.32";}
+if(index==11) //Ir
+	{document.length_con.BG.value="0.0";
+	document.length_con.AW.value="192.2";
+	document.length_con.VE.value="9";
+	document.length_con.ro.value="22.5";}
+if(index==12) //Mo
+	{document.length_con.BG.value="0.0";
+	document.length_con.AW.value="95.94";
+	document.length_con.VE.value="6";
+	document.length_con.ro.value="10.2";}
+if(index==13) //Ni
+	{document.length_con.BG.value="0.0";
+	document.length_con.AW.value="58.71";
+	document.length_con.VE.value="10";
+	document.length_con.ro.value="8.9";}
+if(index==14) //Pd
+	{document.length_con.BG.value="0.0";
+	document.length_con.AW.value="106.4";
+	document.length_con.VE.value="10";
+	document.length_con.ro.value="12";}
+if(index==15) //Pt
+	{document.length_con.BG.value="0.0";
+	document.length_con.AW.value="195.09";
+	document.length_con.VE.value="10";
+	document.length_con.ro.value="21.4";}
+if(index==16) //Ru
+	{document.length_con.BG.value="0.0";
+	document.length_con.AW.value="101.07";
+	document.length_con.VE.value="8";
+	document.length_con.ro.value="12.2";}
+if(index==17) //Ti
+	{document.length_con.BG.value="0.0";
+	document.length_con.AW.value="47.9";
+	document.length_con.VE.value="4";
+	document.length_con.ro.value="4.51";}
+if(index==18) //W
+	{document.length_con.BG.value="0.0";
+	document.length_con.AW.value="183.85";
+	document.length_con.VE.value="6";
+	document.length_con.ro.value="19.3";}
+if(index==19) //Al2O3
+	{document.length_con.BG.value="9.0";
+	document.length_con.AW.value="101.96";
+	document.length_con.VE.value="24";
+	document.length_con.ro.value="3.99";}
+if(index==20) //GaAs
+	{document.length_con.BG.value="1.35";
+	document.length_con.AW.value="144.64";
+	document.length_con.VE.value="8";
+	document.length_con.ro.value="5.31";}
+if(index==21) //GaP
+	{document.length_con.BG.value="2.24";
+	document.length_con.AW.value="100.69";
+	document.length_con.VE.value="8";
+	document.length_con.ro.value="4.13";}
+if(index==22) //GeO2
+	{document.length_con.BG.value="0.0";
+	document.length_con.AW.value="104.58";
+	document.length_con.VE.value="16";
+	document.length_con.ro.value="4.7";}
+if(index==23) //SiO2
+	{document.length_con.BG.value="9.1";
+	document.length_con.AW.value="60.084";
+	document.length_con.VE.value="16";
+	document.length_con.ro.value="2.65";}
+if(index==24) //Si3N4
+	{document.length_con.BG.value="5.25";
+	document.length_con.AW.value="140.28";
+	document.length_con.VE.value="32";
+	document.length_con.ro.value="3.17";}
+if(index==25) //TiO2
+	{document.length_con.BG.value="0.0";
+	document.length_con.AW.value="79.898";
+	document.length_con.VE.value="16";
+	document.length_con.ro.value="4.26";}
+
+convert();
+}
+
+window.onload = convert;
+
+</script>
+
+
+</head>
+
+<body>
+<font size="5"><b>
+
+Compute inelastic mean free path of electron scattering </b></font>
+<font size="4">
+
+<form name="length_con"><br>
+Material = 
+<select name="material" onchange="set_material()"><option>Si</option><option>4H-SiC</option><option>6H-SiC</option><option>Graphite</option><option>Diamond</option><option>Ag</option><option>Al</option><option>Au</option><option>Cr</option><option>Cu</option><option>Ge</option><option>Ir</option><option>Mo</option><option>Ni</option><option>Pd</option><option>Pt</option><option>Ru</option><option>Ti</option><option>W</option><option>Al2O3</option><option>GaAs</option><option>GaP</option><option>GeO2</option><option>SiO2</option><option>Si3N4</option><option>TiO2</option></select><br><br>
+Bandgap (eV) = <input name="BG" value="1.12" size="12" maxlength="12" onkeyup="convert()" type="text">
+<br>
+Atomic weight = <input name="AW" value="28.086" size="12" maxlength="12" onkeyup="convert()" type="text"><br>
+# Valence electrons = <input name="VE" value="4" size="12" maxlength="12" onkeyup="convert()" type="text"> <br>
+Density ro (g/cm<sup>3</sup>) = <input name="ro" value="2.33" size="12" maxlength="12" onkeyup="convert()" type="text"> <br><br>
+ 
+<b>Energy (eV) = </b><input name="En" value="1000" size="12" maxlength="12" onkeyup="convert()" type="text"><br>
+<br>
+
+<label id="IMFP" size="12" maxlength="12" type="text"></label><br>
+<label id="comp1" size="12" maxlength="12" type="text"></label><br>
+<label id="comp2" size="12" maxlength="12" type="text"></label>
+</form>
+</font>
+<br>
+<hr>
+Reference: S. Tanuma, C. J. Powell, D. R. Penn: Surf. Interf. Anal.,Vol. 21, 165 (1993)
+<br><hr style="width: 100%; height: 2px;">
+<a href="lab.html">main</a>
+</body></html>

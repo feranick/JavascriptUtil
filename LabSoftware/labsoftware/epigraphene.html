@@ -1,0 +1,219 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Epitaxial graphene on SiC calculators</title>
+
+<script type="text/javascript">
+
+//siccov
+
+var a=-0.12627;
+var b=0.46649;
+var c=-0.03;
+var d=0.00102;
+var e=-1.3373e-5;
+
+function convert_CSi_ratio()
+{
+ratio = document.siccov.from_value.value;
+if(isNaN(document.siccov.from_value.value) || isNaN(document.siccov.C_value.value) || isNaN(document.siccov.Si_value.value))
+document.getElementById("thick_value").innerHTML = "Not a valid number.";
+else
+{
+// Conversion
+document.getElementById("warning").innerHTML = " ";
+	NL=a + b * ratio + c*ratio*ratio + d*ratio*ratio*ratio + e*ratio*ratio*ratio*ratio;
+if(NL<1 && ratio<=30)
+	{document.getElementById("thick_value").innerHTML = " Less than buffer layer (Total # layers: "+NL.toFixed(2)+")";}
+else
+	{if (ratio>30)
+		{document.getElementById("thick_value").innerHTML = " The epigraphene layer is thicker than: buffer + 2.6 ML   (Total: 3.6 ML).";
+		document.getElementById("warning").innerHTML = " WARNING: the Si peak intensity is below accurate level of measurement.";}
+	else
+		{document.getElementById("thick_value").innerHTML = " Buffer layer + " + (NL-1).toFixed(2)  +"    (Total # layers= "+NL.toFixed(2)+")";}
+	}
+}
+}
+
+function convert_CSi_Int()
+{
+ratio1 = document.siccov.C_value.value/document.siccov.Si_value.value;
+
+document.siccov.from_value.value = ratio1.toFixed(2);
+convert_CSi_ratio();
+}
+
+function resetform0()
+	{document.siccov.C_value.value = 1200 *1;
+	document.siccov.Si_value.value = 900 *1;
+	convert_CSi_Int();
+	}
+
+
+// domsize
+
+var a1=2.36985663e-10;
+var b1=560;
+var c1=1239.8424121;
+
+function get_Ldom_ratio()
+{
+lambda = document.length_con.lambda.value;
+iD = document.length_con.iD.value;
+iG = document.length_con.iG.value;
+base = document.length_con.base.value *1;
+if(isNaN(document.length_con.lambda.value) || isNaN(document.length_con.iG.value) || isNaN(document.length_con.iD.value) || isNaN(document.length_con.base.value))
+	{document.getElementById("domsize_value").innerHTML = "Not a valid number.";
+	document.getElementById("eV_value").innerHTML = "Not a valid number.";}
+else
+	{
+	document.getElementById("warning").innerHTML = " ";
+	document.getElementById("eV_value").innerHTML = " = "+ (c1/lambda).toFixed(2) + " eV";
+	var r = (iG-base)/(iD-base);
+	document.getElementById("iratio_value").innerHTML = "-> iG/iD = "+ r.toFixed(2);
+	Ldom=a1*Math.pow(lambda,4)*r;		
+	document.getElementById("domsize_value").innerHTML = " "+Ldom.toFixed(2)+" nm";
+}
+}
+
+
+function laserlambda()
+{
+	var index = document.length_con.laser.selectedIndex;
+	if(index ==0)
+		{document.length_con.lambda.value="632.72";}
+	if(index==1)
+		{document.length_con.lambda.value="472.817";}
+	if(index==2)
+		{document.length_con.lambda.value="488";}
+	get_Ldom_ratio();
+}
+
+function resetform1()
+	{document.length_con.iG.value = "1200";
+	document.length_con.iD.value = "900";
+	document.length_con.base.value = "100";
+	laserlambda();	
+	}
+
+
+//Strain calculator
+var a2=1583*1;
+var b2=2641*1;
+
+
+function calc_strain()
+{
+gamma = document.strain.gamma.value *1;
+Xa = document.strain.Xa.value *1;
+Xb = document.strain.peak.value *1;
+if(isNaN(document.strain.gamma.value) || isNaN(document.strain.Xa.value))
+	{document.getElementById("strain_value").innerHTML = "Not a valid number.";}
+
+else
+	{
+
+//document.getElementById("warning").innerHTML = " ";
+	domega = (Xa-Xb);	
+	document.getElementById("delta_value").innerHTML =  domega.toFixed(2);
+	strain=(domega/(Xb*gamma))*100;
+	document.getElementById("strain_value").innerHTML =  strain.toFixed(2) + " %";
+	if(domega>0.0)
+		{document.getElementById("strain_warning").innerHTML = "Compressive stress";}
+	if(domega<0.0)
+		{document.getElementById("strain_warning").innerHTML = "Tensile stress";}
+	if(domega==0.0)
+		{document.getElementById("strain_warning").innerHTML = "No stress";}	
+
+	}
+}
+
+
+function peaktype()
+{
+var index = document.strain.peakselect.selectedIndex;
+//document.getElementById("strain_warning").innerHTML = index;
+if(index ==0)
+{document.strain.peak.value=a2;
+document.strain.gamma.value=1.8;}
+if(index==1)
+{document.strain.peak.value=b2;
+document.strain.gamma.value=2.7;}
+calc_strain();
+}
+
+function resetform2()
+	{peaktype();	
+	document.strain.Xa.value = a2+20;
+	document.strain.Xb.value = a2;
+	}
+
+
+
+
+
+window.onload = function() {
+convert_CSi_ratio();
+get_Ldom_ratio();
+calc_strain();
+}
+
+
+</script>
+</head>
+<body>
+<font size="4">
+<b><a href="siccov.html">Determine the number of epigraphene layers from AES intensities</a></b> 
+<form name="siccov">
+C Intensity: <input name="C_value" value="1200" size="12" maxlength="12" type="text" onkeyup="convert_CSi_Int()"> 
+Si Intensity: <input name="Si_value" value="900" size="12" maxlength="12" type="text" onkeyup="convert_CSi_Int()">
+<br>
+C:Si ratio: <input name="from_value" value="1.33" size="12" maxlength="12" type="text" onkeyup="convert_CSi_ratio()"><br><br>
+<input value="Reset" onclick="resetform0()" type="button">
+Graphene layer thickness: <label id="thick_value" size="12" maxlength="12" type="text"></label><br>
+ <label id="warning" size="12" maxlength="12" type="text"></label>
+</form>
+</font>
+
+<br><hr style="width: 100%; height: 2px;">
+
+<font size="4">
+<b><a href="domsize.html">Graphene domain size from the intensities of the Raman D and G peaks</a></b> 
+<form name="length_con">
+Intensity G peak = <input name="iG" value="1200" size="12" maxlength="12" type="text" onkeyup="get_Ldom_ratio()"> <br>
+Intensity D peak = <input name="iD" value="900" size="12" maxlength="12" type="text" onkeyup="get_Ldom_ratio()">
+<label id="iratio_value" size="12" maxlength="12" type="text"></label>
+<br>
+Baseline = <input name="base" value="100" size="12" maxlength="12" type="text" onkeyup="get_Ldom_ratio()">
+<br><font size="4"><br>
+<select name="laser" onchange="laserlambda()" onBlur="laserlambda()"><option>Red laser (632.72 nm)</option><OPTION>Blue laser (472.817 nm)</OPTION><option>Green laser (488 nm)</option></select>
+<input name="lambda" value="632.72" size="12" maxlength="12" type="text" onkeyup="get_Ldom_ratio()"></font>
+<label id="eV_value" size="12" maxlength="12" type="text"></label>
+<br>
+<br><input value="Reset" onclick="resetform1()" type="button">
+ Domain size = 
+<label id="domsize_value" size="12" maxlength="12" type="text"></label><br><label id="warning" size="12" maxlength="12" type="text"></label>
+</form></font>
+
+<br><hr style="width: 100%; height: 2px;">
+
+<font size="4">
+<b><a href="straincalc.html">Compute epigraphene film residual strain from Raman shift</a></b> 
+<form name="strain">
+Peak type = <select name="peakselect" onchange="peaktype()" onBlur="peaktype()"><option>G peak (1583 cm^-1)</option><OPTION>2D peak (2641 cm^-1)</OPTION></select>
+<input name="peak" value="1583" size="12" maxlength="12" type="text" onkeyup="calc_strain()"> cm<sup>-1</sup>
+<br>
+Current peak position = <input name="Xa" value="1590" size="12" maxlength="12" type="text" onkeyup="calc_strain()"> cm<sup>-1</sup><br>
+<font size="4">
+Delta omega = <label id="delta_value" size="12" maxlength="12" type="text"></label> cm<sup>-1</sup><br><br>
+Gruneisen parameter (gamma) = <input name="gamma" value="1.8" size="12" maxlength="12" type="text" onkeyup="calc_strain()"><br>
+<br><input value="Reset" onclick="resetform2()" type="button">
+ Strain = 
+<label id="strain_value" size="12" maxlength="12" type="text"></label><br><br>
+	<label id="strain_warning" size="12" maxlength="12" type="text"></label>
+</font>
+</form>
+</font>
+<br><hr style="width: 100%; height: 2px;">
+<a href="lab.html">main</a>
+
+</body></html>

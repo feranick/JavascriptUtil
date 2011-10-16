@@ -1,0 +1,186 @@
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>4 point probe</title>
+
+<script type="text/javascript">
+
+var dv = 1*1;
+var c = Math.PI/Math.log(2);
+var nm2mm = 1e-6;
+var nm2cm = 1e-7;
+var cun = 1*1;
+var vun = 1*1;
+var tun = 1*1;
+
+function sinh (arg) {
+    return (Math.exp(arg) - Math.exp(-arg))/2;
+    	}
+
+function calc()
+{
+v1 = document.fourpp.v1.value*1;
+v2 = document.fourpp.v2.value*1;
+i = document.fourpp.i.value*1;
+t = document.fourpp.t.value*1;
+s = document.fourpp.s.value*1;
+
+if(isNaN(document.fourpp.v1.value) || isNaN(document.fourpp.v2.value) || isNaN(document.fourpp.i.value) || isNaN(document.fourpp.t.value)|| isNaN(document.fourpp.t.value) || isNaN(document.fourpp.s.value))
+	{document.getElementById("warning").innerHTML = "Not a valid number.";}
+
+else
+	{document.getElementById("warning").innerHTML = "";
+	cc=Math.PI/Math.log(sinh((t*nm2mm)/s)/sinh((t*nm2mm)/(2*s)));
+	document.getElementById("c").innerHTML =  c.toFixed(3);	
+	document.getElementById("cc").innerHTML =  cc.toFixed(3);		
+	dv=Math.abs((v1-v2)/2);	
+	document.getElementById("dv").innerHTML =  dv.toFixed(2);	
+	dv=dv*vun;	
+	Rs = (dv/(i*cun))*(c*1000);
+	Rsc = (dv/(i*cun))*(cc*1000);
+
+	
+	if(Rs<=1e3)
+	{document.getElementById("Rs").innerHTML =  Rs.toFixed(2) + " Ohm/sq";	
+		document.getElementById("Rsc").innerHTML =  Rsc.toFixed(2) + " Ohm/sq";}
+		
+	if(Rs<=1e6 && Rs>1e3)		
+	{document.getElementById("Rs").innerHTML =  (Rs/1e3).toFixed(3) + " KOhm/sq";	
+		document.getElementById("Rsc").innerHTML =  (Rsc/1e3).toFixed(3)+ " KOhm/sq";}
+		
+	if(Rs>1e6)		
+	{document.getElementById("Rs").innerHTML =  (Rs/1e6).toFixed(3) + " MOhm/sq";	
+		document.getElementById("Rsc").innerHTML =  (Rsc/1e6).toFixed(3)+ " MOhm/sq";}	
+
+	R=Rs*t*tun*nm2cm;
+	Rc=Rsc*t*tun*nm2cm;
+	
+	if(R<=1e-3)
+		{document.getElementById("R").innerHTML =  (R*1e3).toFixed(3) + " mOhm cm";	
+		document.getElementById("Rc").innerHTML =  (Rc*1e3).toFixed(3) + " mOhm cm";}
+		
+	if(R>1e-3 && R<=1e3)
+		{document.getElementById("R").innerHTML =  R.toFixed(3) + " Ohm cm";	
+		document.getElementById("Rc").innerHTML =  Rc.toFixed(3) + " Ohm cm";}
+		
+}
+}
+
+
+function ctype()
+{
+var index = document.fourpp.cunits.selectedIndex;
+if(index ==0)
+	{cun=1.0;}
+if(index==1)
+	{cun=1e3;}
+calc();
+}
+
+function vtype()
+{
+var index = document.fourpp.vunits.selectedIndex;
+if(index ==0)
+	{vun=1.0;
+	document.getElementById("v2l").innerHTML =  "mV";
+	document.getElementById("dvl").innerHTML =  "mV";	}
+if(index==1)
+	{vun=1e-3;
+	document.getElementById("v2l").innerHTML =  "uV";
+	document.getElementById("dvl").innerHTML =  "uV";	}
+if(index==2)
+	{vun=1e3;
+	document.getElementById("v2l").innerHTML =  "V";
+	document.getElementById("dvl").innerHTML =  "V";	}
+calc();
+}
+
+function ttype()
+{
+var index = document.fourpp.tunits.selectedIndex;
+if(index ==0)
+	{tun=1.0;}
+if(index==1)
+	{tun=1e3;}
+if(index==2)
+	{tun=1e6;}	
+calc();
+}
+
+function stype()
+{
+var index = document.fourpp.spac.selectedIndex;
+if(index ==0)
+	{document.fourpp.s.value = 1.016*1;}
+if(index==1)
+	{document.fourpp.s.value = 1.27*1;}
+if(index==2)
+	{document.fourpp.s.value = 1.5875*1;}	
+calc();
+}
+
+function clearform()
+	{document.fourpp.v1.value = "95";
+	document.fourpp.v2.value = "-98";
+	ctype();
+	}
+
+function resetform()
+	{clearform();
+	document.fourpp.i.value = "45.3";
+	document.fourpp.t.value = "200";
+	document.fourpp.spac.selectedIndex = 0;
+	ctype();
+	}
+
+window.onload = function() {
+document.getElementById("v2l").innerHTML =  "mV";
+document.getElementById("dvl").innerHTML =  "mV";
+calc();
+}
+
+</script>
+</head>
+<body>
+<font size="4"><b>Film resistivity measurements (4 point probe)</b><br><br>
+
+<form name="fourpp">
+Current = <input name="i" value="45.3" size="12" maxlength="12" type="text" onkeyup="calc()">
+<select name="cunits" onchange="ctype()" onBlur="ctype()"><option>uA</option><OPTION>mA</OPTION></select><br><br>
+
+Voltage A = <input name="v1" value="95" size="12" maxlength="12" type="text" onkeyup="calc()"> 
+<select name="vunits" onchange="vtype()" onBlur="vtype()"><option>mV</option><OPTION>uV</OPTION><OPTION>V</OPTION></select><br>
+Voltage B = <input name="v2" value="-99" size="12" maxlength="12" type="text" onkeyup="calc()"> 
+<label id="v2l" size="12" maxlength="12" type="text"></label><br>
+Average Voltage = <label id="dv" size="12" maxlength="12" type="text"></label>
+<label id="dvl" size="12" maxlength="12" type="text"></label><br>
+<br>
+
+Film Thickness = <input name="t" value="200" size="12" maxlength="12" type="text" onkeyup="calc()"> 
+<select name="tunits" onchange="ttype()" onBlur="ttype()"><option>nm</option><OPTION>um</OPTION><OPTION>mm</OPTION></select><br>
+Probe Spacing = <select name="spac" onchange="stype()" onBlur="stype()"><option>40 mil</option><OPTION>50 mil</OPTION><OPTION>62.5 mil </OPTION></select> = 
+<input name="s" value="1.016" size="12" maxlength="12" type="text" onkeyup="calc()"> mm<br>
+<small>Geometric coefficient = <label id="c" size="12" maxlength="12" type="text"></label> 
+(corrected = <label id="cc" size="12" maxlength="12" type="text"></label>) </small><br>
+<br>
+<b>Sheet Resistance = <label id="Rs" size="12" maxlength="12" type="text"></label></b><br> 
+(Corrected: <label id="Rsc" size="12" maxlength="12" type="text"></label>)<br><br>
+<b>Film Resistivity =  <label id="R" size="12" maxlength="12" type="text"></label></b><br>
+(Corrected =  <label id="Rc" size="12" maxlength="12" type="text"></label>)<br>
+___________________________________
+<br><input value="Clear" onclick="clearform()" type="button"><input value="Reset" onclick="resetform()" type="button">  
+<b><label id="warning" size="12" maxlength="12" type="text"></label></b>
+
+
+</form></font>
+<hr style="width: 100%; height: 2px;">
+<small>
+<ul>
+  <li>Voltage A and B are measured with voltage leads swapped.</li>
+  <li>Geometric coefficient: <b>c = PI/ln(2) </b><br>
+  Correction to the geometric coefficient is necessary when t>s/2. <br>	<b>c = PI/ln(sinh(t/s)/sinh(t/2*s)) </b></li>
+</ul>
+</small>
+<small>More info: <a href="http://pvcdrom.pveducation.org/CHARACT/4pp.HTM"> here </a> and <a href="http://www-inst.eecs.berkeley.edu/~ee143/fa05/lab/four_point_probe.pdf">here </a></small>
+
+<hr style="width: 100%; height: 2px;">
+<br><small><a href="lab.html">main</a></small>
+</body></html>

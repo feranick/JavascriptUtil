@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Strain calculator for graphene with Raman spectroscopy</title>
+
+<script type="text/javascript">
+
+var a2=1582*1;
+var b2=2700*1;
+var c=1239.8;
+
+var laserred=632.72*1;
+var laserblue=472.817*1;
+var lasergreen=488*1;
+var laser4=532*1;
+var laser=514*1;
+
+function calc_strain()
+{
+
+document.getElementById("entoev").innerHTML = (c/document.strain.lambda.value).toFixed(3) + " eV";
+gamma = document.strain.gamma.value *1;
+Xa = document.strain.Xa.value *1;
+Xb = document.strain.peak.value *1;
+if(isNaN(document.strain.gamma.value) || isNaN(document.strain.Xa.value))
+	{document.getElementById("strain_value").innerHTML = "Not a valid number.";}
+
+else
+	{
+
+//document.getElementById("warning").innerHTML = " ";
+	domega = (Xa-Xb);	
+	document.getElementById("delta_value").innerHTML =  domega.toFixed(2);
+	strain=(domega/(Xb*gamma))*100;
+	document.getElementById("strain_value").innerHTML =  strain.toFixed(2) + " %";
+	if(domega>0.0)
+		{document.getElementById("warning").innerHTML = "Compressive stress";}
+	if(domega<0.0)
+		{document.getElementById("warning").innerHTML = "Tensile stress";}
+	if(domega==0.0)
+		{document.getElementById("warning").innerHTML = "No stress";}	
+
+	}
+}
+
+
+function peaktype()
+{
+var index = document.strain.peakselect.selectedIndex;
+//document.getElementById("warning").innerHTML = index;
+if(index ==0)
+	{document.strain.peak.value=a2;
+	document.strain.gamma.value=1.8;}
+if(index==1)
+	{document.strain.peak.value=(b2 - 100*(c/laser - c/document.strain.lambda.value)).toFixed(0);
+	//document.strain.peak.value=c/laser - c/document.strain.lambda.value;
+	document.strain.gamma.value=2.7;}
+calc_strain();
+}
+
+function laserlambda()
+{
+	var index = document.strain.laser.selectedIndex;
+	//document.getElementById("warning").innerHTML = index;
+	if(index==0)
+		{document.strain.lambda.value=laserred;}
+	if(index==1)
+		{document.strain.lambda.value=laser4;}	
+	if(index==2)
+		{document.strain.lambda.value=laser;}
+	if(index==3)
+		{document.strain.lambda.value=lasergreen;}
+	if(index==4)
+		{document.strain.lambda.value=laserblue;}
+
+peaktype();
+}
+
+
+function resetform()
+	{document.strain.peakselect.selectedIndex=0;
+	peaktype();	
+	document.strain.Xa.value = a2+20;
+	document.strain.Xb.value = a2;
+	calc_strain();
+	}
+
+window.onload = calc_strain;
+</script>
+</head>
+<body>
+<font size="4"><b>Strain calculator for graphene with Raman spectroscopy</b><br><br>
+<form name="strain"><font size="4">
+Laser wavelength = <select name="laser" onchange="laserlambda()" onblur="laserlambda()"><option>Red laser (632.72 nm)</option><option>532 nm</option><option>Argon green (514 nm)</option><option>Green laser (488 nm)</option><option>Blue laser (472.817 nm)</option></select>
+<input name="lambda" value="632.72" size="12" maxlength="12" onkeyup="peaktype()" type="text"> nm = <label id="entoev" size="12" maxlength="12" type="text"></label> <br>
+Peak type = <select name="peakselect" onchange="peaktype()" onBlur="peaktype()"><option>G peak (1583 cm^-1)</option><OPTION>2D peak (energy dispersive)</OPTION></select>
+<input name="peak" value="1583" size="12" maxlength="12" type="text" onkeyup="calc_strain()"> cm<sup>-1</sup>
+<br><br>
+Current peak position = <input name="Xa" value="1603" size="12" maxlength="12" type="text" onkeyup="calc_strain()"> cm<sup>-1</sup><br>
+Delta omega = <label id="delta_value" size="12" maxlength="12" type="text"></label> cm<sup>-1</sup><br><br>
+Gruneisen parameter (gamma) = <input name="gamma" value="1.8" size="12" maxlength="12" type="text" onkeyup="calc_strain()"><br><br>
+ Strain = <label id="strain_value" size="12" maxlength="12" type="text"></label><br>
+	<label id="warning" size="12" maxlength="12" type="text"></label>
+<br><br><input value="Reset" onclick="resetform()" type="button">
+</font>
+</form>
+<hr>
+<small><small>Reference: N. Ferralis, R. Maboudian, C. Carraro, Phys. Rev. Lett. 101, 156801 (2008)  </small></small>
+
+<br><hr style="width: 100%; height: 2px;">
+<small><a href="lab.html">main</a></small>
+</body></html>

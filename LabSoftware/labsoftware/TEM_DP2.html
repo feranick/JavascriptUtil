@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Measure lattice constants from TEM diffraction patterns - alternative method</title>
+
+<font>
+<script type="text/javascript">
+var en1=1.226426 *1; //1.22/Ev^0.5 in nm
+var en2=0.000000978475682 *1; //relativistic correction
+
+
+function Conv()
+{
+	energy = document.TEM_DP.energy.value *1;
+	CL = document.TEM_DP.CL.value *10; //in mm
+	R = document.TEM_DP.R.value *1; //in mm
+	
+	a1 = document.TEM_DP.a1.value *1;
+	a2 = document.TEM_DP.a2.value *1;
+	a3 = document.TEM_DP.a3.value *1;
+
+	if(isNaN(document.TEM_DP.energy.value) || isNaN(document.TEM_DP.R.value) || isNaN(document.TEM_DP.CL.value) || isNaN(document.TEM_DP.a1.value) || isNaN(document.TEM_DP.a2.value) || isNaN(document.TEM_DP.a3.value))
+		{document.getElementById("warning").innerHTML = "Not a valid number.";
+		document.getElementById("lambda_value").innerHTML = " ";
+		document.getElementById("CL_value").innerHTML = " ";
+		document.getElementById("film_value").innerHTML = " ";
+		document.getElementById("dstar_value").innerHTML = " ";
+		document.getElementById("d_value").innerHTML = " ";
+	   document.getElementById("a_value").innerHTML = " ";}
+	else
+		{document.getElementById("warning").innerHTML = " ";
+	   
+	//Actual conversion
+
+	lambda = en1/Math.sqrt(energy*1000);
+	lambda2 = lambda/Math.sqrt(1+(energy*1000)*en2); //in nm
+
+	Rd = CL * lambda2; //in mm*nm
+	d = Rd/R; //in nm
+	dstar = Math.sqrt(Math.pow(a1,2)+Math.pow(a2,2)+Math.pow(a3,2));
+	a = dstar*10*d;	
+	
+	if(energy<=0.0)
+		{document.getElementById("lambda_value").innerHTML = " Negative energy! ";}
+	else
+		{
+		//document.getElementById("lambda_value").innerHTML = "Lambda = "+ lambda.toFixed(8) + " nm (non-rel) = "+ lambda2.toFixed(8) + " nm (rel) ";
+		document.getElementById("lambda_value").innerHTML = "Lambda = " + lambda2.toFixed(8) + " nm ";		
+		document.getElementById("CL_value").innerHTML = "Rd = "+ Rd.toFixed(2);
+		document.getElementById("d_value").innerHTML = "Distance between corresponding planes in real space = "+ (d*10).toFixed(4) + " A";
+		document.getElementById("dstar_value").innerHTML = "Unitless vectorial plane interlayer distance (" +a1+ "," +a2+ "," +a3+ ") = "+ dstar.toFixed(3);
+		document.getElementById("a_value").innerHTML = "Lattice constant = "+ a.toFixed(3) +" A";
+		}
+	}	
+
+}
+
+function ElLambda()
+{
+	var index = document.TEM_DP.selenergy.selectedIndex;
+	//document.getElementById("warning").innerHTML = index;
+	if(index==0)
+		{document.TEM_DP.energy.value="120";}
+	if(index==1)
+		{document.TEM_DP.energy.value="200";}
+	if(index==2)
+		{document.TEM_DP.energy.value="300";}
+
+	Conv();
+}
+
+
+function setCL()
+{
+	var index = document.TEM_DP.selCL.selectedIndex;
+	//document.getElementById("warning").innerHTML = index;
+	if(index==0)
+		{document.TEM_DP.CL.value="82";
+		document.getElementById("film_value").innerHTML="Film size: 8.3x10.4 cm";}
+	if(index==1)
+		{document.TEM_DP.CL.value="120";}
+	if(index==2)
+		{document.TEM_DP.CL.value="200";}
+
+	Conv();
+}
+
+function microscope()
+{
+	var index = document.TEM_DP.seltem.selectedIndex;
+	//document.getElementById("warning").innerHTML = index;
+	if(index==0)
+		{document.TEM_DP.selenergy.selectedIndex = 0;
+		document.getElementById("film_value").innerHTML="Film size: 8.3x10.4 cm";
+		document.TEM_DP.energy.value="120";
+		document.TEM_DP.CL.value="82";}
+	if(index==1)
+		{document.TEM_DP.selenergy.selectedIndex = 1;
+		document.getElementById("film_value").innerHTML="Film size: ";
+		document.TEM_DP.energy.value="200";
+		document.TEM_DP.CL.value="82";}
+	Conv();
+}
+
+function resetform()
+	{document.TEM_DP.seltem.selectedIndex=0;
+	document.TEM_DP.selenergy.selectedIndex = 0;
+	document.TEM_DP.energy.value="120";
+	document.TEM_DP.selCL.selectedIndex = 0;
+	document.TEM_DP.CL.value="83";
+	Conv();
+	}
+
+function init() {
+microscope();
+Conv();
+}
+
+window.onload = init; 
+
+
+</script>
+
+</font>
+</head>
+<body>
+ 
+<form name="TEM_DP"><font size="4"><b>Measure lattice constants from TEM diffraction patterns - alternative method</b><br><br>
+Microscope = <select name="seltem" onchange="microscope()" onblur="microscope()"><option>Jeol 200CX</option><option>Philips CM200</option></select><br>
+<label id="film_value" size="12" maxlength="12" type="text"></label><br><br>
+Energy = <select name="selenergy" onchange="ElLambda()" onblur="ElLambda()"><option>120 keV</option><option>200 keV</option><option>300 keV</option></select>
+<input name="energy" value="120" size="12" maxlength="12" onkeyup="Conv()" type="text"> keV
+<br>
+<label id="lambda_value" size="12" maxlength="12" type="text"></label><br>
+<br>
+Camera length = <select name="selCL" onchange="setCL()" onblur="setCL()"><option>82 cm</option><option>120 cm</option><option>200 cm</option></select>
+<input name="CL" value="83" size="12" maxlength="12" onkeyup="Conv()" type="text"><br>
+
+<label id="CL_value" size="12" maxlength="12" type="text"></label><br><br>
+R (measured on the screen, in mm) =
+<input name="R" value="10.4" size="12" maxlength="12" onkeyup="Conv()" type="text"><br>
+<label id="d_value" size="12" maxlength="12" type="text"></label><br><br>
+Miller indices in reciprocal space: <br>
+plane:
+<input name="a1" value="1" size="12" maxlength="12" onkeyup="Conv()" type="text">
+<input name="a2" value="1" size="12" maxlength="12" onkeyup="Conv()" type="text">
+<input name="a3" value="1" size="12" maxlength="12" onkeyup="Conv()" type="text"><br><br>
+
+<label id="dstar_value" size="12" maxlength="12" type="text"></label><br>
+<label id="a_value" size="12" maxlength="12" type="text"></label>
+
+<br><br><label id="warning" size="12" maxlength="12" type="text"></label>
+<br><input value="Reset" onclick="resetform()" type="button">
+
+</font><br>
+<hr style="width: 100%; height: 1px;">
+<small>If the camera length is NOT known, the use of <a href="TEM_DP.html">this alternative method</a> is strongly recommended.</small>
+<hr style="width: 100%; height: 2px;">
+
+<a href="lab.html">main</a>
+</form>
+</body></html>

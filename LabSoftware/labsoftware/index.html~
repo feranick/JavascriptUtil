@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head>
+
+
+
+
+
+<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Scientific Calculators and Utilities</title></head><body>
+<p><b>Epigraphene on SiC </b></p>
+
+
+<ul>
+<li><a href="siccov.html"><b>Layer thickness</b> from C:Si ratio Auger electron spectroscopy</a></li>
+  <li><a href="ramanthick.html"><b>Layer thickness</b></a><a href="ramanthick.html"> with Raman spectroscopy (substrate attenuation)<br>
+</a></li>
+  <li><a href="G2D_thick.html"><span style="font-weight: bold;">Layer thickness </span>via Raman Spectroscopy (G/2D intensity ratio)</a></li>
+
+
+<li><a href="domsize.html"><b>Average domain size</b>
+with Raman spectroscopy</a></li><li><a href="straincalc.html"><b>Strain
+calculator</b> with Raman Spectroscopy</a></li>
+</ul>
+<p></p>
+<p><b>Exfoliated or suspended graphene<br>
+</b></p>
+<ul>
+  <li><a href="optical_thick.html"><span style="font-weight: bold;">Layer thickness </span>via optical microscopy (intensity contrast)</a></li>
+  <li><a href="G2D_thick.html"><span style="font-weight: bold;">Layer thickness </span>via Raman Spectroscopy (G/2D intensity ratio)<br>
+</a></li>
+  <li><a href="domsize.html"><b>Average domain size</b>
+with Raman spectroscopy</a></li>
+
+  <li><a href="straincalc.html"><b>Strain
+calculator</b> with Raman Spectroscopy</a></li>
+</ul>
+<span style="font-weight: bold;">Thin films</span><br>
+<ul>
+  <li><a href="4pp.html"><b>Film Resistivity (4 point probe)</b></a></li>
+  <li><a href="FilmAES.html"><b>Overlayer film
+thickness and composition</b> from Auger electron spectroscopy</a></li>
+  <li><a href="IMFP.html"><b>Inelastic mean free
+path</b> calculator for electron spectroscopy</a></li>
+  <li><a href="ramantemp.html"><b>Raman</b>
+Spectroscopy semiconductor surface<b> thermometer </b></a><br>
+  </li>
+</ul>
+
+
+<p><span style="font-weight: bold;">Other</span><br>
+
+</p>
+<ul>
+  <li><a href="langmuir.html">Calculate rate of gas adsorption on crystal surfaces</a></li>
+  <li><a href="TEM_DP.html">Measure interlayer distances from TEM diffraction pattern</a></li>
+  <li><a href="javascript:void(0);" title=" Energy conversion calculator " onclick='window.open("enconvert.html","Ratting","width=400,height=400,0,status=0,");'>Energy conversion calculator</a></li>
+  <li><a href="javascript:void(0);" title=" Convert to the real
+heater temperature in LEED chamber (Internal use) " onclick='window.open("pchamber.html","Ratting","width=450,height=300,0,status=0,");'>Convert to the real
+heater temperature in LEED chamber (Internal use)</a><br>
+
+  </li>
+</ul>
+
+
+
+
+
+
+<p><span style="font-weight: bold;">Utilities</span><br>
+</p>
+<ul>
+  <li><a href="javascript:void(0);" title=" LaTex equation editor " onclick='window.open("latex.html","Ratting","width=700,height=500,0,status=0,");'>LaTex equation editor</a></li>
+</ul>
+<p>
+</p>
+
+
+<br>
+(Download <a href="labsoftware.zip">full package</a>)<br><hr style="width: 100%; height: 2px;"><small>Questions, suggestions, bugs: Nicola Ferralis - feranick@hotmail.com</small><br>
+<small>version 07252010</small><br><br>
+<hr style="width: 100%; height: 2px;">
+<small>These calculators are licensed under the <a href="http://www.gnu.org/licenses/gpl-3.0.txt">GNU Plublic License v. 3</a></small>
+</body></html>
