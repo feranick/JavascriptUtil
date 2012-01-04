@@ -1,0 +1,173 @@
+<html manifest="enconv.manifest">
+<html><head>
+<title>EnConv</title>
+    		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=0;" />
+
+    <!-- Eliminate url and button bars if added to home screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    
+    <!-- Choose how to handle the phone status bar -->
+    <meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+   <link rel="stylesheet" type="text/css" href="enconv.css" media="screen" />
+    
+    <!-- Choose a 57x57 image for the icon -->
+    <link rel="apple-touch-icon" href="enconv_icon.png" />
+
+<script type="text/javascript">
+var a=11604;
+var b=8065.54;
+var c=1.6021773e-19;
+var d=1239.8;
+var sl=2.99792458e17;
+
+function convert(s)
+{
+enK = document.encon.enK.value*1;
+eneV = document.encon.eneV.value*1;
+enwave = document.encon.enwave.value*1;
+enJ = document.encon.enJ.value*1;
+ennm = document.encon.ennm.value*1;
+enhz = document.encon.enhz.value*1.0e3;
+
+if(isNaN(document.encon.enK.value) || isNaN(document.encon.eneV.value) || isNaN(document.encon.enwave.value) || isNaN(document.encon.enJ.value) || isNaN(document.encon.ennm.value) || isNaN(document.encon.enhz.value))
+document.getElementById("warning").innerHTML = "Not a valid number.";
+else
+{document.getElementById("warning").innerHTML = "";
+if(s==1)
+	{
+	eneV=enK/a;
+	enwave=eneV*b;
+	enJ=eneV*c;
+	ennm=d/eneV;
+	enhz=(sl/ennm)/1.0e12;
+	document.encon.eneV.value = eneV.toFixed(3);
+	document.encon.enwave.value = enwave.toFixed(3);
+	document.encon.enJ.value = enJ.toExponential(3);
+	document.encon.ennm.value = ennm.toFixed(1);
+	document.encon.enhz.value = enhz.toFixed(2);
+	}
+
+else if(s==2)
+	{enK=eneV*a;
+	enwave=eneV*b;
+	enJ=eneV*c;
+	ennm=d/eneV;
+	enhz=(sl/ennm)/1.0e12;
+	document.encon.enwave.value = enwave.toFixed(3);
+	document.encon.enK.value = enK.toFixed(0);
+	document.encon.enJ.value = enJ.toExponential(3);
+	document.encon.ennm.value = ennm.toFixed(1);
+	document.encon.enhz.value = enhz.toFixed(2);
+	}
+
+else if(s==3)
+	{
+	eneV=enwave/b;
+	enK=eneV*a;
+	enJ=eneV*c;
+   ennm=d/eneV;
+	enhz=(sl/ennm)/1.0e12;
+	document.encon.eneV.value = eneV.toFixed(3);
+	document.encon.enK.value = enK.toFixed(0);
+	document.encon.enJ.value = enJ.toExponential(3);
+	document.encon.ennm.value = ennm.toFixed(1);
+	document.encon.enhz.value = enhz.toFixed(2);	
+	}
+
+else if(s==4)
+	{
+	eneV=enJ/c;
+	enK=eneV*a;
+	enwave=eneV*b;	
+	ennm=d/eneV;
+	enhz=(sl/ennm)/1.0e12;
+	document.encon.eneV.value = eneV.toFixed(3);
+	document.encon.enK.value = enK.toFixed(0);
+	document.encon.enwave.value = enwave.toFixed(3);
+	document.encon.ennm.value = ennm.toFixed(1);
+	document.encon.enhz.value = enhz.toFixed(2);
+	}
+	
+else if(s==5)
+	{eneV=d/ennm;
+	enK=eneV*a;
+	enwave=eneV*b;
+	enJ=eneV*c;
+	enhz=(sl/ennm)/1.0e12;
+	document.encon.eneV.value = eneV.toFixed(3);
+	document.encon.enwave.value = enwave.toFixed(3);
+	document.encon.enK.value = enK.toFixed(0);
+	document.encon.enJ.value = enJ.toExponential(3);
+	document.encon.enhz.value = enhz.toFixed(2);
+	}
+	
+else if(s==6)
+	{ennm=sl/(enhz*1.0e9);
+	eneV=d/ennm;
+	enK=eneV*a;
+	enwave=eneV*b;
+	enJ=eneV*c;
+	document.encon.eneV.value = eneV.toFixed(3);
+	document.encon.enwave.value = enwave.toFixed(3);
+	document.encon.enK.value = enK.toFixed(0);
+	document.encon.enJ.value = enJ.toExponential(3);
+	document.encon.ennm.value = ennm.toFixed(1);
+	}	
+	
+document.getElementById("nmvalue").innerHTML = " nm ";
+document.getElementById("Jvalue").innerHTML = " J ";
+document.getElementById("eVvalue").innerHTML = " eV";
+document.getElementById("Kvalue").innerHTML = " K";
+document.getElementById("wavevalue").innerHTML = " cm^-1";
+document.getElementById("hzvalue").innerHTML = " THz";
+}
+}
+
+function resetform()
+	{document.getElementById("warning").innerHTML = "";
+	document.encon.ennm.value="1";
+	document.encon.enwave.value="1";
+	document.encon.enK.value="1";
+	document.encon.enJ.value="1";
+	document.encon.enhz.value="1";
+	document.encon.eneV.value="1";
+	convert(2);
+	
+	}
+
+
+window.onload = function() {
+convert(2);}
+
+</script>
+</head>
+<body onload="convert(2);">
+<font size="4"><b>Energy conversion calculator</b><br><br>
+    
+<form name="encon">
+
+<input name="enJ" maxlength="12" onkeyup="convert(4)" type="text" id="Entry"> 
+<label id="Jvalue" maxlength="12" type="text"></label><br>
+    
+<input name="eneV" value="1.000" maxlength="12" onkeyup="convert(2)" type="text" id="Entry"> 
+<label id="eVvalue" maxlength="12" type="text"></label><br>
+    
+<input name="enK" maxlength="12" onkeyup="convert(1)" type="text" id="Entry"> 
+    <label id="Kvalue" maxlength="12" type="text"></label><br>
+    
+<input name="enwave" maxlength="12" onkeyup="convert(3)" type="text" id="Entry"> 
+    <label id="wavevalue" maxlength="12" type="text"></label><br>
+    
+<input name="ennm" maxlength="12" onkeyup="convert(5)" type="text" id="Entry"> 
+    <label id="nmvalue" maxlength="12" type="text"></label><br>
+    
+<input name="enhz" maxlength="12" onkeyup="convert(6)" type="text" id="Entry"> 
+    <label id="hzvalue" maxlength="12" type="text"></label><br><br>
+    
+
+<label id="warning" maxlength="12" type="text"></label></font></form>
+        
+<br><input value="Reset" type="button" id="Reset" onclick="resetform()">
+
+</body></html>

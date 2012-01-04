@@ -1,0 +1,169 @@
+<html manifest="pv.manifest">
+<html><head>
+<title>PV designer</title>
+
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=0;" />
+    
+    <!-- Eliminate url and button bars if added to home screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    
+    <!-- Choose how to handle the phone status bar -->
+    <meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <link rel="stylesheet" type="text/css" href="pv.css" media="screen" />
+    
+    <!-- Choose a 57x57 image for the icon -->
+    <link rel="apple-touch-icon" href="pv_icon.png" />
+  
+  <script type="text/javascript">
+
+
+
+function convert()
+
+{
+	Wh_req = document.pv.Wh_req.value*1;
+	whours = document.pv.whours.value*1;
+	shours = document.pv.shours.value*1;
+	costperW = document.pv.costperW.value*1;
+	if(isNaN(document.pv.Wh_req.value) || isNaN(document.pv.whours.value) || isNaN(document.pv.shours.value) || isNaN(document.pv.costperW.value))
+
+		{document.getElementById("warning").innerHTML = "Not a valid number.";}
+
+	else
+
+	{	// Conversion
+
+		document.getElementById("warning").innerHTML = "";
+
+		document.pv.wpeakcap.value=(Wh_req/whours).toFixed(1);
+		document.pv.speakcap.value=(Wh_req/shours).toFixed(1);
+		
+		if((Wh_req/whours)>(Wh_req/shours))
+			{panelsize=(Wh_req/whours).toFixed(0);}
+		else
+			{panelsize=(Wh_req/shours).toFixed(0);}
+	
+			panelsize_c=panelsize;
+			
+		if(document.pv.TempAdjust.checked==true)
+			panelsize_c=(panelsize*1.10).toFixed(0);
+
+		if(document.pv.TiltEff.checked==true)
+			panelsize_c=(panelsize_c*0.92).toFixed(0);
+
+		if(document.pv.TrackEff.checked==true)
+			panelsize_c=(panelsize_c*0.96).toFixed(0);
+
+		if(document.pv.BattEff.checked==true)
+			panelsize_c=(panelsize_c*1.6).toFixed(0);
+
+		if(document.pv.WireLoss.checked==true)
+			panelsize_c=(panelsize_c*1.05).toFixed(0);
+
+
+		document.pv.panelsize.value=panelsize_c;
+		document.pv.panelcost.value=panelsize_c*costperW;
+		document.pv.wendaily.value=(panelsize*whours).toFixed(0);
+		document.pv.sendaily.value=(panelsize*shours).toFixed(0);
+	}
+
+}
+
+
+function resetform()
+
+	{document.pv.Wh_req.value=1200;
+	document.pv.whours.value=3.5;
+	document.pv.shours.value=6.5;
+	document.pv.costperW.value=4.5;
+	convert();
+	}
+
+
+
+
+
+window.onload = function() {
+
+convert();
+
+}
+
+
+
+
+
+  </script>
+</head><body>
+<form name="pv"> <big><span style="font-weight: bold;">Solar Panel
+Requirements
+Calculator</span></big><br>
+  <br>
+Energy demand/day: <input name="Wh_req" value="1200" size="12" maxlength="12" onkeyup="convert()" type="text" id="Entry"> Wh<br>
+  <label id="warning" size="12" maxlength="12" type="text"></label> <br>
+  <table style="text-align: left" border="1" cellpadding="2" cellspacing="1">
+    <tbody>
+      <tr>
+        <td style="vertical-align: top;"><br>
+        </td>
+        <td style="vertical-align: top; ">Winter (min)<br>
+        </td>
+        <td style="vertical-align: top; ">Summer (Max)<br>
+        </td>
+      </tr>
+      <tr>
+        <td style="vertical-align: top; text-align: left;">Averaged
+hours
+sun/day<br>
+        </td>
+        <td style="vertical-align: top;"><input name="whours" value="3.5" size="12" maxlength="12" onkeyup="convert()" id="Entry"><br>
+        </td>
+        <td style="vertical-align: top;"><input name="shours" value="6.5" size="12" maxlength="12" onkeyup="convert()" id="Entry"><br>
+        </td>
+      </tr>
+      <tr>
+        <td style="vertical-align: top;">Peak capacity (W)<br>
+        </td>
+        <td style="vertical-align: top;"><input name="wpeakcap" value="3.5" size="12" maxlength="12" readonly="readonly" type="text" id="Entry"><br>
+        </td>
+        <td style="vertical-align: top; "><input name="speakcap" value="3.5" size="12" maxlength="12" readonly="readonly" type="text" id="Entry"><br>
+        </td>
+      </tr>
+      <tr>
+        <td style="vertical-align: top;">Suggested panel
+size (W)<br>
+        </td>
+        <td colspan="2" rowspan="1" style="vertical-align: top; text-align: center; width: 110px;"><input name="panelsize" value="100" size="12" maxlength="12" readonly="readonly" id="Entry"></td>
+      </tr>
+      <tr>
+        <td style="vertical-align: top;">Estimated cost
+($)<br>
+        </td>
+        <td colspan="2" rowspan="1" style="vertical-align: top; text-align: center;"><input name="panelcost" value="100" size="12" maxlength="12" readonly="readonly" id="Entry" ></td>
+      </tr>
+      <tr>
+        <td style="vertical-align: top;">Total energy
+provided daily (Wh)<br>
+        </td>
+        <td style="vertical-align: top;"><input name="wendaily" value="3.5" size="12" maxlength="12" readonly="readonly" id="Entry"></td>
+        <td style="vertical-align: top;"><input name="sendaily" value="3.5" size="12" maxlength="12" readonly="readonly" id="Entry"></td>
+      </tr>
+    </tbody>
+  </table>
+  <label id="warning" size="12" maxlength="12" type="text"></label><br>
+  <span style="font-weight: bold;">Efficiency readjustment: </span><br>
+Temperature readjustment (-10% efficiency): <input name="TempAdjust" value="3.5" onclick="convert()" type="checkbox"><br>
+Battery efficiency (-60% efficiency): <input name="BattEff" value="3.5" onclick="convert()" type="checkbox"><br>
+Wiring loss (-5% efficiency): <input name="WireLoss" value="3.5" onclick="convert()" type="checkbox"><br>
+  <br>
+Tilt adjustment (+8% efficiency): <input name="TiltEff" value="3.5" onclick="convert()" type="checkbox"><br>
+Sun tracking (+4% efficiency): <input name="TrackEff" value="3.5" onclick="convert()" type="checkbox"><br>
+  <br>
+Cost per Watt ($): <input name="costperW" value="4.5" size="12" maxlength="12" onkeyup="convert()" id="Entry">&nbsp;<br>
+  <small><small>(e.g. 4.0 $/W is for current Si-based PV cells)</small></small><br>
+  <br>
+  <input value="Reset" onclick="resetform()" type="button" id="Reset">
+  <br><br><small>version 1.0.1</small> </form>
+
+</body></html>

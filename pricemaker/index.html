@@ -1,0 +1,314 @@
+<html manifest="pm.manifest">
+<html><head>
+
+<title>Pricemaker</title>
+
+    		<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=0;" />
+            
+            <!-- Eliminate url and button bars if added to home screen -->
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+            
+            <!-- Choose how to handle the phone status bar -->
+            <meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+            
+            <link rel="stylesheet" type="text/css" href="pm.css" media="screen" />
+            
+            <!-- Choose a 57x57 image for the icon -->
+            <link rel="apple-touch-icon" href="pm_icon.png" />
+    
+    
+<script type="text/javascript">
+var sprof, s;
+
+function convert()
+{
+wls = document.pricemaker.wls.value*1;
+ret = document.pricemaker.ret.value*1;
+wlstax = document.pricemaker.wlstax.value*1;
+tax = document.pricemaker.tax.value*1;
+prof = document.pricemaker.prof.value*1;
+disc = document.pricemaker.disc.value*1;
+
+
+if(isNaN(document.pricemaker.wls.value) || isNaN(document.pricemaker.ret.value) || isNaN(document.pricemaker.tax.value) || isNaN(document.pricemaker.prof.value))
+	{document.getElementById("profit_value").innerHTML = "Not a valid number.";}
+else
+	{
+	if(s==1)
+		{if(sprof==0)
+			{b3=wls/(1-(prof/100));
+			b2=(b3-wls);
+			c=b3*(1+tax/100);
+			b1=c-b3;
+			b4=wls*(tax/100);
+			b5=b1-b4;
+			b6=c*(1-disc/100.0);
+			b8=b1*(1-disc/100.0);  //disc tax
+			bt=b6-b8;            //disc price - taxes
+			b7=bt- wls;
+			b9=wls+b1;
+			document.pricemaker.ret.value = c.toFixed(2);	
+			document.pricemaker.wlstax.value = b9.toFixed(2);	}
+		else
+			{	b2=wls*(prof/100);
+				b3=wls+b2;
+				b1=b3*(tax/100);
+				b4=wls*(tax/100);
+				b5=b1-b4;
+				c=wls+b2+b1;
+				b6=c*(1-disc/100.0);
+				b8=b1*(1-disc/100.0);  //disc tax
+				bt=b6-b8;            //disc price - taxes
+				b7=bt- wls;	
+				b9=wls+b1;
+				document.pricemaker.ret.value = c.toFixed(2);	
+				document.pricemaker.wlstax.value = b9.toFixed(2);	}
+			
+		}
+
+		
+	if(s==2)
+		{if(sprof==0)
+			{b1=ret*(1-1/(1+tax/100));
+			b2=(ret-b1)*(prof/100);
+			c=ret-b1-b2;
+			b4=c*tax/100;
+			b5=b1-b4;
+			b6=ret*(1-disc/100);
+			b8=b1*(1-disc/100.0);  //disc tax
+			bt=b6-b8;            //disc price - taxes
+			b7=bt- c;
+			b9=c+b1;
+			document.pricemaker.wls.value = c.toFixed(2);
+			document.pricemaker.wlstax.value = b9.toFixed(2);	}
+		else
+			{b3=ret/(1+tax/100);
+			b1=ret-b3;
+			c=b3/(1+prof/100);
+			b2=ret-b1-c;
+			b4=c*tax/100;
+			b5=b1-b4;	
+			b6=ret*(1-disc/100);
+			b8=b1*(1-disc/100.0);  //disc tax
+			bt=b6-b8;            //disc price - taxes
+			b7=bt-c;	
+			b9=c+b1;
+			document.pricemaker.wls.value = c.toFixed(2);
+			document.pricemaker.wlstax.value = b9.toFixed(2);}
+		}		
+		
+
+if(s==3)
+		{if(sprof==0)	
+			{wls = wlstax/(1+tax/100);
+			b3=wls/(1-prof/100);
+			b2=b3-wls;
+			c=b3*(1+tax/100);
+			b1=c-b3;
+			b4=wls*(tax/100);
+			b5=b1-b4;
+			b6=c*(1-disc/100.0);
+			b8=b1*(1-disc/100.0);  //disc tax
+			bt=b6-b8;            //disc price - taxes
+			b7=bt-wls;
+					
+			document.pricemaker.wls.value = wls.toFixed(2);		
+			document.pricemaker.ret.value = c.toFixed(2);}
+		else
+			{	wls = wlstax/(1+tax/100);
+			b2=wls*(prof/100);
+			b3=wls+b2;
+			b1=b3*(tax/100);
+			b4=wls*(tax/100);
+			b5=b1-b4;
+			c=wls+b2+b1;
+			b6=c*(1-disc/100.0);
+			b8=b1*(1-disc/100.0);  //disc tax
+			bt=b6-b8;            //disc price - taxes
+			b7=bt- wls;	
+			document.pricemaker.wls.value = wls.toFixed(2);		
+			document.pricemaker.ret.value = c.toFixed(2);}
+		}		
+	
+				
+				
+		document.getElementById("tax_value").innerHTML = b1.toFixed(2);
+		document.getElementById("profit_value").innerHTML = b2.toFixed(2);
+		document.getElementById("taxprofit_value").innerHTML = b5.toFixed(2);
+		document.getElementById("taxcredit_value").innerHTML = b4.toFixed(2);
+		document.getElementById("discprof_value").innerHTML = b7.toFixed(2);
+		document.getElementById("disctax_value").innerHTML = b8.toFixed(2);
+		document.getElementById("discpr_value").innerHTML = b6.toFixed(2);
+		
+		
+		
+	}
+}
+
+
+function caltax()
+{
+	var index = document.pricemaker.seltax.selectedIndex;
+	
+	if(index==0)
+		{document.pricemaker.tax.value=0;}
+	if(index==1)
+		{document.pricemaker.tax.value=1;}
+	if(index==2)
+		{document.pricemaker.tax.value=19.6;}
+	if(index==3)
+		{document.pricemaker.tax.value=20;}
+	if(index==4)
+		{document.pricemaker.tax.value=30;}	
+	
+	convert(1);
+}
+
+function calprof()
+{
+	var index = document.pricemaker.selprof.selectedIndex;
+	
+	if(index==0)
+		{document.pricemaker.prof.value=0;}
+	if(index==1)
+		{document.pricemaker.prof.value=1;}
+	if(index==2)
+		{document.pricemaker.prof.value=5;}
+	if(index==3)
+		{document.pricemaker.prof.value=10;}
+	if(index==4)
+		{document.pricemaker.prof.value=15;}
+	if(index==5)
+		{document.pricemaker.prof.value=20;}	
+	if(index==6)
+		{document.pricemaker.prof.value=30;}					
+	
+	convert(1);
+}
+
+function calp()
+{
+	var index = document.pricemaker.sprof.selectedIndex;
+	
+	if(index==0)
+		{sprof=0;}
+	if(index==1)
+		{sprof=1;}					
+	convert(1);
+}
+
+function caldisc()
+{
+	var index = document.pricemaker.seldisc.selectedIndex;
+	
+	if(index==0)
+		{document.pricemaker.disc.value=0;}
+	if(index==1)
+		{document.pricemaker.disc.value=1;}
+	if(index==2)
+		{document.pricemaker.disc.value=5;}
+	if(index==3)
+		{document.pricemaker.disc.value=10;}
+	if(index==4)
+		{document.pricemaker.disc.value=15;}
+	if(index==5)
+		{document.pricemaker.disc.value=20;}	
+	
+	convert(1);
+}
+function conv(a)
+	{s=a;
+	convert();}
+
+
+function resetform()
+	{document.pricemaker.seltax.selectedIndex=3;
+document.pricemaker.selprof.selectedIndex=6;
+document.pricemaker.seldisc.selectedIndex=0;
+	s=1;
+	convert(1);
+	}
+	
+function init() {
+sprof=0;
+s=1;
+document.pricemaker.seltax.selectedIndex=3;
+document.pricemaker.selprof.selectedIndex=6;
+document.pricemaker.seldisc.selectedIndex=0;
+convert(1);
+}
+
+window.onload = init; 	
+	
+
+</script>
+</head>
+<body>
+
+<form name="pricemaker"><font size="4">
+<b><big>Pricemaker</big></b><br>
+<br>Tax (%) = <select name="seltax" onchange="caltax()" onblur="caltax()">
+<option>0</option><option>1</option><option>19.6</option><option>20</option><option>30</option></select>
+ <input name="tax" value="20" size="12" maxlength="12" onkeyup="convert()" type="text" id="Entry"><br>
+
+Profit (%) = <select name="selprof" onchange="calprof()" onblur="calprof()">
+<option>0</option><option>1</option><option>5</option><option>10</option><option>15</option><option>20</option><option>30</option></select>
+<input name="prof" value="30" size="12" maxlength="12" onkeyup="convert()" type="text" id="Entry"><br>
+<small>Profit is calculated on the: </small><select name="sprof" onchange="calp()" onblur="calp()">
+<option>Retail</option><option>Wholesale</option></select><small> price </small>
+
+<br><br>Wholesale ($) = <input name="wls" value="1000" size="12" maxlength="12" onkeyup="conv(1)" type="text" id="Entry"><br>
+
+Profit ($) = <label id="profit_value" size="12" maxlength="12" type="text"></label><br>
+Tax credit ($) = <label id="taxcredit_value" size="12" maxlength="12" type="text"></label><br>
+Tax profit ($) = <label id="taxprofit_value" size="12" maxlength="12" type="text"></label><br>
+Tax ($) = <label id="tax_value" size="12" maxlength="12" type="text"></label><br>
+
+<br>Wholesale+Tax ($) = <input name="wlstax" value="" size="12" maxlength="12" onkeyup="conv(3)" type="text" id="Entry"><br>
+
+Retail ($) = <input name="ret" value="" size="12" maxlength="12" onkeyup="conv(2)" type="text" id="Entry"><br>
+
+<br>Discount (%) = <select name="seldisc" onchange="caldisc()" onblur="caldisc()">
+<option>0</option><option>1</option><option>5</option><option>10</option><option>15</option><option>20</option></select>
+<input name="disc" value="0" size="12" maxlength="12" onkeyup="convert()" type="text" id="Entry"><br>
+
+Discounted price ($) = <label id="discpr_value" size="12" maxlength="12" type="text"></label><br>
+Discounted profit ($) = <label id="discprof_value" size="12" maxlength="12" type="text"></label><br>
+Discounted tax ($) = <label id="disctax_value" size="12" maxlength="12" type="text"></label><br>
+<br>
+
+<input value="Reset" onclick="resetform()" type="button" id="Reset"><br><br>
+<small><small><p>The program allows the choice of calculating the profit on
+the wholesale price or on the the retail price.</p>
+
+
+
+<ol>
+
+
+
+  <li><b>Profit on wholesale</b>: the profit is calculated 
+	on the wholesale price. This profit is calculated starting from the price 
+	input by the user (it can be either in the "Wholesale", in the final "Retail", 
+	or in the "Wholesale + Tax" field).</li>
+
+
+
+  <li><b>Profit on retail</b>: the profit is calculated on 
+	the retail price. This margin is calculated starting from the price input by 
+	the user (it can be either in the "Wholesale", in the final "Retail", or in 
+	the "Wholesale + Tax" field).</li>
+
+</ol>
+
+
+
+<p>By selecting the proper tax percentage, the program calculates the tax amounts for: the wholesale price
+("<b>Tax credit</b>"), the profit ("<b>Tax profit</b>") and the total final price
+("<b>Tax</b>"). A discount can be also be applied. The program calculates the discounted retail price
+("<b>Disc. price</b>"), the margin of profit on the discounted price
+("<b>Disc. profit</b>") and the total tax amount for the discounted price
+("<b>Tax disc. price</b>").
+</p>
+</small></small>
+</body></html>

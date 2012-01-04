@@ -1,0 +1,83 @@
+<html manifest="mortgage.manifest">
+
+<html><head>
+<title>Mortgage calculator</title>
+
+<script type="text/javascript">
+
+
+function calc()
+{
+
+amount = document.mortgage.amount.value*1;  
+interest = document.mortgage.interest.value*1;
+years = document.mortgage.years.value*1;    
+    
+
+if(isNaN(document.mortgage.amount.value) || isNaN(document.mortgage.interest.value) || isNaN(document.mortgage.years.value))
+	{document.getElementById("warning").innerHTML = "Not a valid number.";}
+
+else
+	{document.getElementById("warning").innerHTML = "";
+    monthPay=(amount*interest/(100.0*12.0))/(1.0-(1.0/Math.pow((1.0+interest/(100.0*12.0)),years*12.0)));
+      total = monthPay*years*12.0;
+        totalInterest = total*1-amount*1;    
+ 
+	document.getElementById("monthPay").innerHTML =  monthPay.toFixed(2) + " $";
+    document.getElementById("totalInterest").innerHTML =  totalInterest.toFixed(2) + " $";
+    document.getElementById("total").innerHTML =  total.toFixed(2) + " $";
+
+    
+	}
+}
+
+
+/*function presstype()
+{
+var index = document.langmuir.pressunits.selectedIndex;
+if(index ==0)
+	{punits=1.0;}
+if(index==1)
+	{punits=mbartotorr;}
+exp();
+}
+
+function exp()
+{
+exptime = (document.langmuir.stime.value*1)+(document.langmuir.mtime.value*60);
+calc();
+}
+
+*/ 
+function resetform()
+	{//document.langmuir.pressunits.selectedIndex=0;	
+	document.mortgage.amount.value = "10000";
+	document.mortgage.interest.value = "5";
+	document.mortgage.years.value = "20";
+	
+	}
+
+window.onload = function() {
+calc();
+}
+
+</script>
+</head>
+<body>
+<font size="4"><b>Mortgage calculator</b>
+<br><br>
+<form name="mortgage"><font size="4">
+Amount requested = <input name="amount" value="10000" size="12" maxlength="12" type="text" onkeyup="calc()"><br>
+Interest = <input name="interest" value="5" size="12" maxlength="12" type="text" onkeyup="calc()"><br>
+Years = <input name="years" value="1" size="12" maxlength="12" type="text" onkeyup="exp()"><br>
+<br> <b>Monthly Payments = <label id="monthPay" size="12" maxlength="12" type="text"></label></b><br>
+<br> <b>Total Interests = <label id="totalInterest" size="12" maxlength="12" type="text"></label></b><br>
+<br> <b>Total= <label id="total" size="12" maxlength="12" type="text"></label></b><br>
+<label id="warning" size="12" maxlength="12" type="text"></label>
+<br><br><input value="Reset" onclick="resetform()" type="button">
+
+</form></font>
+<br>
+<hr style="width: 100%; height: 2px;">
+<small><a href="lab.html">main</a></small>
+</body></html>
