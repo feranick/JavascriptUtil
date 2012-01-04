@@ -1,0 +1,138 @@
+<html manifest="lab.manifest">
+
+<html><head>
+<title>Diameter in SWCNT</title>
+
+<script type="text/javascript">
+
+    var b=214;
+    var a=19;
+    
+    var b1=248;
+    var a1=0;
+    
+    var b2=234;
+    var a2=10;
+    
+    
+    var s0=1591.1;
+    var s1=1.231;
+    var s2=-49.199;
+    var s3=0.55661;
+    
+    var m0=1591;
+    var m1=0.26421;
+    var m2=-80.457;
+    var m3=0.58208;
+    var prec=0.01
+    
+    
+
+function calc_rbm()
+{
+rbm = document.cnt.rbm.value*1;
+    
+if(isNaN(document.cnt.rbm.value))
+	{document.getElementById("warning").innerHTML = "Not a valid number.";}
+    
+else    
+    {document.getElementById("warning").innerHTML = "";
+if (document.cnt.bundletype.selectedIndex==0)
+    {diam_rbm=(rbm-a)/b;}
+
+if (document.cnt.bundletype.selectedIndex==1)
+    {diam_rbm=(rbm-a1)/b1;} 
+        
+if (document.cnt.bundletype.selectedIndex==2)
+        {diam_rbm=(rbm-a2)/b2;}         
+    
+    if(diam_rbm<0.5 || diam_rbm>2.0)
+        {document.getElementById("dvalue").innerHTML =  " Outside range (0.6 < d < 2 nm)";}
+
+    else    
+        {document.getElementById("dvalue").innerHTML =  diam_rbm.toFixed(2) + " nm";}
+    
+    }
+}
+    
+function calc_gm()
+    {
+        gm = document.cnt.gm.value*1;
+        
+        if(isNaN(document.cnt.gm.value))
+        {document.getElementById("warning").innerHTML = "Not a valid number.";}
+        
+        else {
+            if(document.cnt.gm.value<1500 || document.cnt.gm.value>1592)
+            {document.getElementById("dvalue2").innerHTML = " Outside range";}   
+            
+        
+        
+        else    
+        {   document.getElementById("warning").innerHTML = "";
+            z=0.0;
+            while (z<=100.0)
+            {z+=0.001;
+                
+                if (document.cnt.etype.selectedIndex==0)
+            {
+                    t=s0+s1*z+s2*z^2+s3*z^3;
+            }
+                if (document.cnt.etype.selectedIndex==1)
+            {       
+                t=m0+m1*z+m2*z^2+m3*z^3;
+                }
+                
+                if ((t-gm)<0.01)
+                {break;}
+            }
+            
+            diam_gm=1/z;
+            
+            document.getElementById("dvalue2").innerHTML =  diam_gm.toFixed(2) + " nm";
+            
+        }    
+        }
+
+}
+
+   
+    
+function resetform()
+    {document.cnt.bundletype.selectedIndex=0;	
+        document.cnt.rbm.value = "200";
+        calc_rbm();}
+    
+function resetform2()
+    {document.cnt.gm.value = "1550";
+        calc_gm();}    
+    
+    
+window.onload = function() {
+    calc_rbm();
+    calc_gm();
+}
+
+</script>
+</head>
+<body>
+<font size="4"><b>Determination of diameter of SWNT from Raman Spectroscopy</b>
+<br><br>
+<form name="cnt"><font size="4">
+RBM frequency = <input name="rbm" value="200" size="12" maxlength="12" type="text" onkeyup="calc_rbm()">
+<select name="bundletype" onchange="calc_rbm()" onBlur="calc_rbm()"><option>small</option><OPTION>single</OPTION><OPTION>bundle</OPTION></select>
+<br><br><b>Diameter = <label id="dvalue" size="12" maxlength="12" type="text"></label></b><br>
+<label id="warning" size="12" maxlength="12" type="text"></label>
+<br><input value="Reset" onclick="resetform()" type="button">
+    
+<hr style="width: 100%; height: 2px;">
+ 
+    G- frequency = <input name="gm" value="1550" size="12" maxlength="12" type="text" onkeyup="calc_gm()">
+        <select name="etype" onchange="calc_gm()" onBlur="calc_gm()"><option>semiconductive</option><OPTION>metallic</OPTION></select>
+        <br><br><b>Diameter = <label id="dvalue2" size="12" maxlength="12" type="text"></label></b><br>
+<br><input value="Reset" onclick="resetform2()" type="button">
+</form></font>
+
+<hr style="width: 100%; height: 2px;">
+<small><a href="lab.html">main</a></small>
+</body></html>
