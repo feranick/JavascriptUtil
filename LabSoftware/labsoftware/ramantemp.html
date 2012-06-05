@@ -5,14 +5,16 @@
 
 <font>
 <script type="text/javascript">
-var a=1.45 *1;
+var a=1.43877506 *1;
 var b=1.0e7 *1;
 var laserred=632.72*1;
 var laserblue=472.817*1;
 var lasergreen=488*1;
 var Sipeak=521.581*1;
 var SiCpeak=785*1;
-var Gpeak = 1592*1;    
+var Gpeak = 1592*1;
+var Dpeak = 1340*1;    
+var ratio = 1*1;    
 
 function convert()
 {
@@ -20,14 +22,27 @@ lambda = document.length_con.lambda.value *1;
 peak=document.length_con.peak.value *1;
 S = document.length_con.S.value *1;
 AS = document.length_con.AS.value *1;
-if(isNaN(document.length_con.lambda.value) || isNaN(document.length_con.S.value) || isNaN(document.length_con.AS.value) || isNaN(document.length_con.peak.value))
+base = document.length_con.base.value *1;
+//ratio = document.length_con.ratio.value *1;
+    
+if(isNaN(document.length_con.lambda.value) || isNaN(document.length_con.S.value) || isNaN(document.length_con.AS.value) || isNaN(document.length_con.peak.value) || isNaN(document.length_con.base.value))
 	{document.getElementById("to_value").innerHTML = "Not a valid number.";
 	document.getElementById("Sratio_value").innerHTML = "Not a valid number.";}
 else
 {document.getElementById("warning").innerHTML = " ";
 //Actual conversion
-document.getElementById("Sratio_value").innerHTML = "S/AS = "+ (S/AS).toFixed(2) + "";
-coeff=(Math.pow(((b/lambda) + peak),3)/Math.pow(((b/lambda) - peak),3)); temp=peak*a/Math.log(S*coeff/AS);
+    
+if(document.length_con.ratio.hasFocus)
+    {ratio = document.length_con.ratio.value;}
+else
+    {ratio = (S-base)/(AS-base);
+		document.length_con.ratio.value = ratio.toFixed(2);} 
+    
+//document.getElementById("Sratio_value").innerHTML = "S/AS = "+ ((S-base)/(AS-base)).toFixed(2) + "";
+coeff=(Math.pow(((b/lambda) + peak),3)/Math.pow(((b/lambda) - peak),3)); 
+    
+temp=peak*a/Math.log(ratio*coeff);
+    
 if(temp<=0.0)
 {document.getElementById("to_value").innerHTML = " Negative temperature! ";}
 else
@@ -55,11 +70,13 @@ function peaksel()
 var index = document.length_con.peakc.selectedIndex;
 //document.getElementById("warning").innerHTML = index;
 if(index==0)
-{document.length_con.peak.value=Sipeak;}
+{document.length_con.peak.value=Gpeak;}
 if(index==1)
-{document.length_con.peak.value=SiCpeak;}
+    {document.length_con.peak.value=Dpeak;}    
 if(index==2)
-{document.length_con.peak.value=Gpeak;}    
+    {document.length_con.peak.value=Sipeak;}
+if(index==3)
+    {document.length_con.peak.value=SiCpeak;}    
 
 convert();
 }
@@ -70,7 +87,7 @@ function resetform()
 document.length_con.peakc.selectedIndex=0;
 document.length_con.S.value="4300";
 document.length_con.AS.value="346";
-document.length_con.peak.value=Sipeak;
+document.length_con.peak.value=Gpeak;
 //document.length_con.lambda.value=laserred;
 laserlambda();
 }
@@ -88,9 +105,12 @@ window.onload = convert;
 peaks, in the Raman spectroscopy spectrum. </small><br><br></font>
 <form name="length_con"><font size="4">Laser wavelength = <select name="laser" onchange="laserlambda()" onblur="laserlambda()"><option>Red laser (632.72 nm)</option><option>Blue laser (472.817 nm)</option><option>Green laser (488 nm)</option></select>
 <input name="lambda" value="632.72" size="12" maxlength="12" onkeyup="convert()" type="text"> nm<br>
-Phonon peak = <select name="peakc" onchange="peaksel()" onblur="peaksel()"><option>Si (521.5 1/cm)</option><option>SiC (785 1/cm)</option><option>G peak - Graphene/CNT (1591 1/cm)</option></select><input name="peak" value="521.5" size="12" maxlength="12" onkeyup="convert()" type="text"> cm<sup>-1</sup><label id="eV_value" size="12" maxlength="12" type="text"></label><br><br>
-Intensity Stokes = <input name="S" value="4300" size="12" maxlength="12" onkeyup="convert()" type="text"><br>
-Intensity AntiStokes = <input name="AS" value="346" size="12" maxlength="12" onkeyup="convert()" type="text">  <label id="Sratio_value" size="12" maxlength="12" type="text"></label><br><br>
+Phonon peak = <select name="peakc" onchange="peaksel()" onblur="peaksel()"><option>G peak - Graphene/CNT (1591 1/cm)</option><option>D peak - Graphene/CNT (~1340 1/cm)</option><option>SiC (785 1/cm)</option><option>Si (521.5 1/cm)</option></select><input name="peak" value="521.5" size="12" maxlength="12" onkeyup="convert()" type="text"> cm<sup>-1</sup><label id="eV_value" size="12" maxlength="12" type="text"></label><br><br>
+Intensity Stokes = <input name="S" value="4300" size="12" maxlength="12" onkeyup="convert()" onfocus="this.hasFocus=true" onblur="this.hasFocus=false" type="text"><br>
+Intensity AntiStokes = <input name="AS" value="346" size="12" maxlength="12" onkeyup="convert()" onfocus="this.hasFocus=true" onblur="this.hasFocus=false" type="text"> 
+S/AS ratio = <input name="ratio" value="1" size="12" maxlength="12" onkeyup="convert()" onfocus="this.hasFocus=true" onblur="this.hasFocus=false" type="text"> 
+    <label id="Sratio_value" size="12" maxlength="12" type="text"></label><br>
+    Baseline = <input name="base" value="0" size="12" maxlength="12" onkeyup="convert()" type="text"><br><br>     
 <b> Surface temperature = 
 <label id="to_value" size="12" maxlength="12" type="text"></label><br><label id="warning" size="12" maxlength="12" type="text"></label></b></font></form><font size="4"><br></font>
     <input value="Reset" onclick="resetform()" type="button">

@@ -8,10 +8,15 @@
 var a1=2.36985663e-10;
 var b1=560;
 var c1=1239.8424121;
-var C;
     
 var a2=0.682;
-    var b2=-0.0105;    
+var b2=-0.0105;    
+    
+var a3=-126;
+var b3=0.033;
+    
+var C;
+var mdom = 20; //threshold for minimum size domain (in A)
 
 function get_Ldom_ratio()
 {
@@ -29,11 +34,23 @@ else
 	if(document.length_con.ir.hasFocus)
 		{var r = document.length_con.ir.value;}
 	else
-		{var r = (iG-base)/(iD-base);
+		{var r = (iD-base)/(iG-base);
 		document.length_con.ir.value = r.toFixed(2);}
 			
-	Ldom=C*r;		
-	document.getElementById("to_value").innerHTML = " "+Ldom.toFixed(2)+" nm";
+	Ldom=(C/r)/10;
+	
+    if(Ldom<(mdom/10))
+        {Ldom=(Math.sqrt(r/(C/Math.pow(mdom,3))))/10;;
+        document.getElementById("warning").innerHTML = "small regime";
+         if(Ldom>2.3)
+            { document.getElementById("warning").innerHTML = "Out of bound"; 
+            document.getElementById("to_value").innerHTML = " "}
+         else
+            {document.getElementById("warning").innerHTML = "small regime";
+            document.getElementById("to_value").innerHTML = " "+Ldom.toFixed(2)+" nm";}
+        }
+    else   
+        {document.getElementById("to_value").innerHTML = " "+Ldom.toFixed(2)+" nm";}   
 	}
 }
 
@@ -72,16 +89,17 @@ function get_Lcdom_ratio()
     }    
     
 function laserlambda()
-{
+    {   var lam;
 	var index = document.length_con.laser.selectedIndex;
 	if(index ==0)
-		{document.length_con.lambda.value="632.72";}
+		{lam=632.72;}
 	if(index==1)
-		{document.length_con.lambda.value="472.817";}
-	if(index ==2)
-		{document.length_con.lambda.value="514";}
-	if(index==3)
-		{document.length_con.lambda.value="488";}
+        {lam=514.5;}
+	if(index==2)
+		{lam=472.817;}
+        document.length_con.lambda.value=lam;
+    document.getElementById("lvalue").innerHTML = " "+lam.toFixed(1);
+
 	peakt();	
 	//get_Ldom_ratio();
 }
@@ -92,18 +110,19 @@ function peakt()
 	if(index==0)
 		{C=a1*Math.pow(document.length_con.lambda.value*1,4);}	
 	if(index ==1)
-		{C=4.5;}
+		{C=a3+b3*document.length_con.lambda.value*10;}
 		
-	document.length_con.Cl.value = C.toFixed(2);		
+	document.length_con.Cl.value = C.toFixed(2);
+    document.getElementById("clvalue").innerHTML = " "+C.toFixed(1);
 	get_Ldom_ratio();
 }
 
 
 function resetform()
 	{document.length_con.laser.selectedIndex=0;
-	document.length_con.peak.selectedIndex=0;
-	document.length_con.iG.value = "1200";
-	document.length_con.iD.value = "900";
+	document.length_con.peak.selectedIndex=1;
+	document.length_con.iG.value = "900";
+	document.length_con.iD.value = "1200";
 	document.length_con.base.value = "100";
     document.getElementById("warning").innerHTML = " ";  
         
@@ -112,8 +131,8 @@ function resetform()
     
 function resetform2()
 	{
-        document.length_con.i2D.value = "1200";
-        document.length_con.i3D.value = "900";
+        document.length_con.i2D.value = "900";
+        document.length_con.i3D.value = "1200";
         document.length_con.base2.value = "0";
         document.getElementById("warning2").innerHTML = " ";  
 	}    
@@ -131,14 +150,14 @@ get_Lcdom_ratio();
 <body>
 <font size="4"><b>Domain Size Calculator for Graphene using Raman Spectroscopy</b><br><br>
 <form name="length_con"><font size="4">
-Intensity G peak = <input name="iG" value="1200" size="12" maxlength="12" type="text" onkeyup="get_Ldom_ratio()" onfocus="this.hasFocus=true" onblur="this.hasFocus=false"> <br>
-Intensity D peak = <input name="iD" value="900" size="12" maxlength="12" type="text" onkeyup="get_Ldom_ratio()" onfocus="this.hasFocus=true" onblur="this.hasFocus=false">
-Ratio G/D = <input name="ir" value="900" size="12" maxlength="12" type="text" onkeyup="get_Ldom_ratio()" onfocus="this.hasFocus=true" onblur="this.hasFocus=false">
+Intensity D peak = <input name="iD" value="1200" size="12" maxlength="12" type="text" onkeyup="get_Ldom_ratio()" onfocus="this.hasFocus=true" onblur="this.hasFocus=false"> <br>
+Intensity G peak = <input name="iG" value="900" size="12" maxlength="12" type="text" onkeyup="get_Ldom_ratio()" onfocus="this.hasFocus=true" onblur="this.hasFocus=false">
+Ratio D/G = <input name="ir" value="900" size="12" maxlength="12" type="text" onkeyup="get_Ldom_ratio()" onfocus="this.hasFocus=true" onblur="this.hasFocus=false">
 <label id="iratio_value" size="12" maxlength="12" type="text"></label>
 <br>
 Baseline = <input name="base" value="0" size="12" maxlength="12" type="text" onkeyup="get_Ldom_ratio()">
 <br><font size="4"><br>
-<select name="laser" onchange="laserlambda()" onBlur="laserlambda()"><option>Red laser (632.72 nm)</option><OPTION>Blue laser (472.817 nm)</OPTION><OPTION>514 nm</OPTION><option>Green laser (488 nm)</option></select>
+<select name="laser" onchange="laserlambda()" onBlur="laserlambda()"><option>Red laser (632.72 nm)</option><OPTION>Green laser (514.5 nm)</OPTION><OPTION>Blue laser (472.817 nm)</OPTION></select>
 <input name="lambda" value="632.72" size="12" maxlength="12" type="text" onkeyup="get_Ldom_ratio()"></font>
 
 <label id="eV_value" size="12" maxlength="12" type="text"></label>
@@ -147,7 +166,8 @@ Intensities measured: <select name="peak" onchange="peakt()" onBlur="peakt()"><o
 <br>C<sub>lambda</sub> = <input name="Cl" value="4.5" size="12" maxlength="12" type="text" onkeyup="peakt()"></font>
 <br><br>
  <b>Domain size (L<sub>dom</sub>) = 
-<label id="to_value" size="12" maxlength="12" type="text"></label></b><br><small><label id="warning" size="12" maxlength="12" type="text"></label></small>
+<label id="to_value" size="12" maxlength="12" type="text"></label> 
+ </b><br><small><small><label id="warning" size="12" maxlength="12" type="text"></label></small></small><br>
 <input value="Reset" onclick="resetform()" type="button"><br>
 <hr>
 
@@ -169,12 +189,14 @@ Intensities measured: <select name="peak" onchange="peakt()" onBlur="peakt()"><o
             
 <input value="Reset" onclick="resetform2()" type="button">            
     
-<hr></form>    
+<hr></Dorm>    
 I<sub>G</sub> / I<sub>D</sub>=C<sub>lambda</sub> L<sub>dom</sub><br><br>
-C<sub>lambda</sub> = 2.4x10<sup>-10</sup> * lambda<sup>4</sup> (for peak-area intensities, recommended);<br>
-C<sub>lambda</sub> = 4.4-4.6 (for peak-to-peak intensities);<br><br>
+C<sub>lambda</sub> =  <label id="clvalue" size="12" maxlength="12" type="text"></label> (for peak-to-peak intensities, lambda=<label id="lvalue" size="12" maxlength="12" type="text"></label> nm); <br>
+C<sub>lambda</sub> = 2.4x10<sup>-10</sup> * lambda<sup>4</sup> (for peak-area intensities);<br>
+   
+    <br><hr style="width: 100%; height: 2px;">
 <small><small>
-References: <br>  A.C. Ferrari, Sol. St. Comm. 143 (2007), 47. <br> M.A. Pimenta et al., Phys. Chem. Chem. 9 (2007), 1276. <br> M.M. Lucchese, et al. Carbon 48 (2010) 1592.<br>L.M. Malard, M.A. Pimenta, G. Dresselhaus, M.S. Dresselhaus, Physics Reports 473 (2009) 51-87.</small></small>
+References: <br>  A.C. Ferrari, Sol. St. Comm. 143 (2007), 47. <br> M.A. Pimenta et al., Phys. Chem. Chem. 9 (2007), 1276. <br> M.M. Lucchese, et al. Carbon 48 (2010) 1592.<br>L.M. Malard, M.A. Pimenta, G. Dresselhaus, M.S. Dresselhaus, Physics Reports 473 (2009) 51-87.<br>M.J. Matthews, M.A. Pimenta. G. Dresselhaus, M.S. Dresselhaus, M. Endo, Phys. Rev. B 59 (1999) R6585.</small></small>
 
 <br><hr style="width: 100%; height: 2px;">
 <small><a href="lab.html">main</a></small>

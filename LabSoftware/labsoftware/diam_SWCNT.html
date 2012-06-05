@@ -5,14 +5,14 @@
 
 <script type="text/javascript">
 
-    var b=214;
-    var a=19;
+    var b2=217.8;
+    var a2=15.7;
     
     var b1=248;
     var a1=0;
     
-    var b2=234;
-    var a2=10;
+    var b=234;
+    var a=10;
     
     
     var s0=1591.1;
@@ -38,13 +38,13 @@ if(isNaN(document.cnt.rbm.value))
 else    
     {document.getElementById("warning").innerHTML = "";
 if (document.cnt.bundletype.selectedIndex==0)
-    {diam_rbm=(rbm-a)/b;}
+    {diam_rbm=b/(rbm-a);}
 
 if (document.cnt.bundletype.selectedIndex==1)
-    {diam_rbm=(rbm-a1)/b1;} 
+    {diam_rbm=b1/(rbm-a1);} 
         
 if (document.cnt.bundletype.selectedIndex==2)
-        {diam_rbm=(rbm-a2)/b2;}         
+        {diam_rbm=b2/(rbm-a2);}         
     
     if(diam_rbm<0.5 || diam_rbm>2.0)
         {document.getElementById("dvalue").innerHTML =  " Outside range (0.6 < d < 2 nm)";}
@@ -99,7 +99,7 @@ function calc_gm()
    
     
 function resetform()
-    {document.cnt.bundletype.selectedIndex=0;	
+    {document.cnt.bundletype.selectedIndex=2;	
         document.cnt.rbm.value = "200";
         calc_rbm();}
     
@@ -120,7 +120,7 @@ window.onload = function() {
 <br><br>
 <form name="cnt"><font size="4">
 RBM frequency = <input name="rbm" value="200" size="12" maxlength="12" type="text" onkeyup="calc_rbm()">
-<select name="bundletype" onchange="calc_rbm()" onBlur="calc_rbm()"><option>small</option><OPTION>single</OPTION><OPTION>bundle</OPTION></select>
+<select name="bundletype" onchange="calc_rbm()" onBlur="calc_rbm()"><option>bundle</option><OPTION>single</OPTION><OPTION>small</OPTION></select>
 <br><br><b>Diameter = <label id="dvalue" size="12" maxlength="12" type="text"></label></b><br>
 <label id="warning" size="12" maxlength="12" type="text"></label>
 <br><input value="Reset" onclick="resetform()" type="button">
